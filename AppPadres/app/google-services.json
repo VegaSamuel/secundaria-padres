@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "978695257819",
+    "project_id": "sistema-escolar-1be36",
+    "storage_bucket": "sistema-escolar-1be36.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:978695257819:android:c252b0defffefc01bd96fe",
+        "android_client_info": {
+          "package_name": "com.example.sistema_educativo_padres"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "978695257819-q5vj2ckko3mois6gfbjlaaqdrvtg5ghh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAl5AFM1byz6ldFUjZE4SGa1wT_jcGMYeM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "978695257819-q5vj2ckko3mois6gfbjlaaqdrvtg5ghh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

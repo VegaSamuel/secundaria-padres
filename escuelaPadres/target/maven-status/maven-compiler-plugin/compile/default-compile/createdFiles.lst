@@ -1,0 +1,7 @@
+com\mycompany\escuelapadres\JakartaRestConfiguration.class
+interfaces\IPadreDAO.class
+com\mycompany\escuelapadres\resources\JakartaEE91Resource.class
+dominio\Padre.class
+dao\PadreDAO.class
+conexion\Conexion.class
+com\mycompany\escuelapadres\resources\PadresResource.class

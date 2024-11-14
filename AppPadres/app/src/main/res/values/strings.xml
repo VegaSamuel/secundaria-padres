@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">sistema_educativo_padres</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_tareas">Tareas</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_signout">Cerrar sesión</string>
+
+    <string name="register_user">Usuario (solo al registrar)</string>
+    <string name="login_email">Correo Electrónico</string>
+    <string name="login_password">Contraseña</string>
+    <string name="login_button">Iniciar Sesión</string>
+    <string name="register_button">Registrarse con correo</string>
+    <string name="login_google_button">Iniciar Sesión con Google</string>
+
+    <string name="api_key">978695257819-q5vj2ckko3mois6gfbjlaaqdrvtg5ghh.apps.googleusercontent.com</string>
+</resources>
