@@ -1,13 +1,21 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
- */
 package interfaces;
+
+import dominio.Tarea;
+import java.util.List;
 
 /**
  *
- * @author atrap
+ * @author Samuel Vega
  */
 public interface ITareaDAO {
     
+    public Tarea obten(int id);
+    
+    public Tarea agregarTarea(Tarea tarea);
+    
+    public Tarea modificarTarea(Tarea tarea);
+    
+    public Tarea eliminarTarea(int id);
+    
+    public List<Tarea> obtenerTareas();
 }

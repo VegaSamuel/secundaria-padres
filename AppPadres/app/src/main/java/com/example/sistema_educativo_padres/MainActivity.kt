@@ -20,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import com.bumptech.glide.Glide
 import com.example.sistema_educativo_padres.databinding.ActivityMainBinding
+import com.example.sistema_educativo_padres.ui.alumnos.AlumnosSearchDialogFragment
 import com.example.sistema_educativo_padres.ui.login.LoginActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -57,10 +58,9 @@ class MainActivity : AppCompatActivity() {
             Glide.with(this).load(photoUri).circleCrop().into(userPhoto)
         }
 
-        binding.appBarMain.fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null)
-                .setAnchorView(R.id.fab).show()
+        binding.appBarMain.fab.setOnClickListener {
+            val dialog = AlumnosSearchDialogFragment()
+            dialog.show(supportFragmentManager, "AlumnosSearchDialogFragment")
         }
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView

@@ -11,6 +11,10 @@
     <string name="menu_gallery">Gallery</string>
     <string name="menu_signout">Cerrar sesión</string>
 
+    <string name="alumno_search">Buscar alumno...</string>
+    <string name="alumno_name">Nombre del alumno</string>
+    <string name="add_button">Agregar</string>
+
     <string name="register_user">Usuario (solo al registrar)</string>
     <string name="login_email">Correo Electrónico</string>
     <string name="login_password">Contraseña</string>
