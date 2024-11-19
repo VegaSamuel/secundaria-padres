@@ -8,8 +8,9 @@
     <EditText
         android:id="@+id/search_alumno"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/alumno_search"/>
+        android:layout_height="48dp"
+        android:inputType="text"
+        android:hint="@string/alumno_search"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/alumnos_list"

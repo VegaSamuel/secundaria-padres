@@ -9,8 +9,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sistema_educativo_padres.R
+import com.example.sistema_educativo_padres.data.Alumno
 
-class AlumnosAdapter : ListAdapter<String, AlumnosAdapter.AlumnoViewHolder>(DIFF_CALLBACK) {
+class AlumnosAdapter(
+    private val onAddAlumno: (Alumno) -> Unit
+) : ListAdapter<Alumno, AlumnosAdapter.AlumnoViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlumnoViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_alumno, parent, false)
@@ -26,23 +29,19 @@ class AlumnosAdapter : ListAdapter<String, AlumnosAdapter.AlumnoViewHolder>(DIFF
         private val alumnoName: TextView = itemView.findViewById(R.id.alumno_name)
         private val addButton: Button = itemView.findViewById(R.id.add_button)
 
-        fun bind(alumno: String) {
-            alumnoName.text = alumno
+        fun bind(alumno: Alumno) {
+            alumnoName.text = "${alumno.nombre} ${alumno.apellido}"
 
             addButton.setOnClickListener {
-                addAlumnoToDatabase()
+                onAddAlumno(alumno)
             }
-        }
-
-        private fun addAlumnoToDatabase() {
-            
         }
     }
 
     companion object {
-        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<String>() {
-            override fun areItemsTheSame(oldItem: String, newItem: String) = oldItem == newItem
-            override fun areContentsTheSame(oldItem: String, newItem: String) = oldItem == newItem
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Alumno>() {
+            override fun areItemsTheSame(oldItem: Alumno, newItem: Alumno) = oldItem.email == newItem.email
+            override fun areContentsTheSame(oldItem: Alumno, newItem: Alumno) = oldItem == newItem
         }
     }
 }
