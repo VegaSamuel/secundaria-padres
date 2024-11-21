@@ -73,7 +73,7 @@ public class AlumnoDAO implements IAlumnoDAO {
 
     @Override
     public Alumno agregarAlumno(Alumno alumno) {
-        String sql = "INSERT INTO alumnos(nombre, apellido, email, padre-id) VALUES(?, ?, ?, ?)";
+        String sql = "INSERT INTO alumnos(nombre, apellido, email, padre_id) VALUES(?, ?, ?, ?)";
         
         try(PreparedStatement stmt = conexion.prepareStatement(sql)) {
             stmt.setString(1, alumno.getNombre());

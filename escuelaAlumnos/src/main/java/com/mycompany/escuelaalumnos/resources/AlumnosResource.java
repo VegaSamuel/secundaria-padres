@@ -26,7 +26,7 @@ public class AlumnosResource {
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getPadre(@PathParam("id") int id) {
+    public Response getAlumno(@PathParam("id") int id) {
         IAlumnoDAO alumnos = null;
         
         try {
@@ -50,7 +50,7 @@ public class AlumnosResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addPadre(Alumno alumno) {
+    public Response addAlumno(Alumno alumno) {
         IAlumnoDAO alumnos = null;
         
         try {
@@ -70,7 +70,7 @@ public class AlumnosResource {
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response modifyPadre(@PathParam("id") int id, Alumno alumno) {
+    public Response modifyAlumno(@PathParam("id") int id, Alumno alumno) {
         IAlumnoDAO alumnos = null;
         
         try {
@@ -95,7 +95,7 @@ public class AlumnosResource {
     @DELETE
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deletePadre(int id) {
+    public Response deleteAlumno(int id) {
         IAlumnoDAO alumnos = null;
         
         try {
@@ -118,7 +118,7 @@ public class AlumnosResource {
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getPadres() {
+    public Response getAlumnos() {
         IAlumnoDAO alumnos = null;
         
         try {

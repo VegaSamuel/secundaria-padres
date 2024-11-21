@@ -70,6 +70,30 @@ public class PadresResource {
         }
     }
     
+    @GET
+    @Path("/correo/{correo}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getPadreEmail(@PathParam("correo") String correo) {
+        IPadreDAO padres = null;
+        
+        try {
+            padres = new PadreDAO();
+            Padre padre = padres.obtenPorEmail(correo);
+            
+            if(padre != null) {
+                return Response.ok(padre).build();
+            }else {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
+        }catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error al obtener el padre").build();
+        }finally {
+            if(padres != null) {
+                Conexion.cerrarConexion();
+            }
+        }
+    }
+    
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)

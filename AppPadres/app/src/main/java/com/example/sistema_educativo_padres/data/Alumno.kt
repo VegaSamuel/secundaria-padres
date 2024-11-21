@@ -1,6 +1,7 @@
 package com.example.sistema_educativo_padres.data
 
 data class Alumno(
+    val id: Int,
     val nombre: String,
     val apellido: String,
     val email: String,

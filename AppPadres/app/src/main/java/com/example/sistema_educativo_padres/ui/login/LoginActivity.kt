@@ -126,7 +126,7 @@ class LoginActivity : AppCompatActivity() {
                     val user = firebaseAuth.currentUser
 
                     if(user != null) {
-                        val padreGoogle = Padre(nombre = cuenta?.displayName ?: "", cuenta?.email ?: "")
+                        val padreGoogle = Padre(-1, nombre = cuenta?.displayName ?: "", cuenta?.email ?: "")
                         savePadreToDatabase(padreGoogle)
                     }
 
@@ -156,7 +156,7 @@ class LoginActivity : AppCompatActivity() {
 
                         UserProfileChangeRequest.Builder().setDisplayName(user).build()
 
-                        val padre = Padre(nombre = user, email = email)
+                        val padre = Padre(-1, nombre = user, email = email)
                         savePadreToDatabase(padre)
 
                         val userNow = FirebaseAuth.getInstance().currentUser
@@ -204,6 +204,14 @@ class LoginActivity : AppCompatActivity() {
         }
         startActivity(main)
         finish()
+    }
+
+    public fun getCurrentUserEmail(): String {
+        val user = FirebaseAuth.getInstance().currentUser
+        if (user != null) {
+            return user.email.toString()
+        }
+        return ""
     }
 
     companion object {

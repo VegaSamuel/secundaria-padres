@@ -1,7 +1,7 @@
-E:\Android Git\sistema_educativo_padres\Sistema-educativo-padres\escuelaAlumnos\src\main\java\dao\AlumnoDAO.java
-E:\Android Git\sistema_educativo_padres\Sistema-educativo-padres\escuelaAlumnos\src\main\java\interfaces\IAlumnoDAO.java
-E:\Android Git\sistema_educativo_padres\Sistema-educativo-padres\escuelaAlumnos\src\main\java\com\mycompany\escuelaalumnos\JakartaRestConfiguration.java
-E:\Android Git\sistema_educativo_padres\Sistema-educativo-padres\escuelaAlumnos\src\main\java\com\mycompany\escuelaalumnos\resources\AlumnosResource.java
-E:\Android Git\sistema_educativo_padres\Sistema-educativo-padres\escuelaAlumnos\src\main\java\dominio\Alumno.java
-E:\Android Git\sistema_educativo_padres\Sistema-educativo-padres\escuelaAlumnos\src\main\java\com\mycompany\escuelaalumnos\resources\JakartaEE91Resource.java
-E:\Android Git\sistema_educativo_padres\Sistema-educativo-padres\escuelaAlumnos\src\main\java\conexion\Conexion.java
+E:\Android Git\secundaria-padres\escuelaAlumnos\src\main\java\com\mycompany\escuelaalumnos\resources\AlumnosResource.java
+E:\Android Git\secundaria-padres\escuelaAlumnos\src\main\java\com\mycompany\escuelaalumnos\JakartaRestConfiguration.java
+E:\Android Git\secundaria-padres\escuelaAlumnos\src\main\java\dominio\Alumno.java
+E:\Android Git\secundaria-padres\escuelaAlumnos\src\main\java\com\mycompany\escuelaalumnos\resources\JakartaEE91Resource.java
+E:\Android Git\secundaria-padres\escuelaAlumnos\src\main\java\conexion\Conexion.java
+E:\Android Git\secundaria-padres\escuelaAlumnos\src\main\java\dao\AlumnoDAO.java
+E:\Android Git\secundaria-padres\escuelaAlumnos\src\main\java\interfaces\IAlumnoDAO.java

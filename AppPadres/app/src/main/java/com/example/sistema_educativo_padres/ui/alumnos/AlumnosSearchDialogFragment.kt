@@ -14,22 +14,33 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sistema_educativo_padres.R
 import com.example.sistema_educativo_padres.data.Alumno
+import com.example.sistema_educativo_padres.ui.login.LoginActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.Response
 import org.json.JSONObject
 import java.io.BufferedReader
+import java.io.IOException
 import java.io.InputStreamReader
-import java.lang.Exception
 import java.net.HttpURLConnection
 import java.net.URL
 
 class AlumnosSearchDialogFragment : DialogFragment() {
     private lateinit var searchField: EditText
     private lateinit var alumnosList: RecyclerView
+    private val padre = LoginActivity()
     private val alumnosAdapter = AlumnosAdapter { alumno ->
         addAlumnoToDatabase(alumno)
     }
+
+    private val client = OkHttpClient()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -78,7 +89,7 @@ class AlumnosSearchDialogFragment : DialogFragment() {
         }
     }
 
-    private fun parseAlumnos(jsonResponse: JSONObject): List<Alumno> {
+    private suspend fun parseAlumnos(jsonResponse: JSONObject): List<Alumno> {
         val alumnos = mutableListOf<Alumno>()
         val list = jsonResponse.optJSONArray("list") ?: return alumnos
 
@@ -93,13 +104,64 @@ class AlumnosSearchDialogFragment : DialogFragment() {
             val nombre = parts.firstOrNull() ?: fullname
             val apellido = parts.drop(1).joinToString(" ")
 
-            alumnos.add(Alumno(nombre, apellido, email, 1))
+            val padreId = getPadreId(padre.getCurrentUserEmail())
+            Log.w("Padre ID", padreId.toString())
+
+            alumnos.add(Alumno(i+1, nombre, apellido, email, padreId ?: -1))
         }
 
         return alumnos
     }
 
     private fun addAlumnoToDatabase(alumno: Alumno) {
+        val url = "http://192.168.0.10:8080/escuelaAlumnos/api/alumnos"
+        val jsonBody = JSONObject()
+        jsonBody.put("nombre", alumno.nombre)
+        jsonBody.put("apellido", alumno.apellido)
+        jsonBody.put("email", alumno.email)
+        jsonBody.put("padre_id", alumno.padre)
+
+        val requestBody = jsonBody.toString().toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
+        val request = Request.Builder().url(url).post(requestBody).build()
+
+        client.newCall(request).enqueue(object: Callback {
+            override fun onResponse(call: Call, response: Response) {
+                if (response.isSuccessful) {
+                    Log.d("Registro", "Alumno registrado en la base de datos")
+                }else {
+                    Log.e("Registro", "Error al registrar al alumno en la base de datos")
+                }
+            }
+
+            override fun onFailure(call: Call, e: IOException) {
+                Log.e("Registro", "Fallo en la conexión al servicio REST", e)
+            }
+        })
+
         Toast.makeText(requireContext(), "Alumno agregado", Toast.LENGTH_SHORT).show()
+    }
+
+    private suspend fun getPadreId(correo: String): Int? {
+        val url = "http://192.168.0.10:8080/escuelaPadres/api/padres/correo/$correo"
+
+        return withContext(Dispatchers.IO) {
+            try {
+                val conexion = URL(url).openConnection() as HttpURLConnection
+                conexion.requestMethod = "GET"
+                conexion.connect()
+
+                if (conexion.responseCode == HttpURLConnection.HTTP_OK) {
+                    val responseText = conexion.inputStream.bufferedReader().use { it.readText() }
+                    val jsonResponse = JSONObject(responseText)
+
+                    jsonResponse.optInt("id", -1).takeIf { it != -1 }
+                }else {
+                    null
+                }
+            }catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
+        }
     }
 }
