@@ -20,4 +20,6 @@ public interface IAlumnoDAO {
     public Alumno eliminarAlumno(int id);
     
     public List<Alumno> obtenerAlumnos();
+    
+    public List<Alumno> obtenerAlumnosPorPadre(int padreId);
 }

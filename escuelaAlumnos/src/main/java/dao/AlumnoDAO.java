@@ -49,7 +49,7 @@ public class AlumnoDAO implements IAlumnoDAO {
 
     @Override
     public Alumno obtenPorEmail(String email) {
-        String sql = "SELECT id, nombre, apellido, email, padre_id FROM alumnos WHERE id = ?";
+        String sql = "SELECT id, nombre, apellido, email, padre_id FROM alumnos WHERE email = ?";
         Alumno alumno = null;
         
         try(PreparedStatement stmt = conexion.prepareStatement(sql)) {
@@ -166,4 +166,28 @@ public class AlumnoDAO implements IAlumnoDAO {
         return alumnos;
     }
     
+    @Override
+    public List<Alumno> obtenerAlumnosPorPadre(int padreId) {
+        List<Alumno> alumnos = new ArrayList<>();
+        String sql = "SELECT id, nombre, apellido, email, padre_id FROM alumnos WHERE padre_id = ?";
+        
+        try(PreparedStatement stmt = conexion.prepareStatement(sql)) {
+            stmt.setInt(1, padreId);
+            ResultSet rs = stmt.executeQuery();
+            
+            while(rs.next()) {
+                Alumno alumno = new Alumno();
+                alumno.setId(rs.getInt("id"));
+                alumno.setNombre(rs.getString("nombre"));
+                alumno.setApellido(rs.getString("apellido"));
+                alumno.setEmail(rs.getString("email"));
+                alumno.setIdPadre(rs.getInt("padre_id"));
+                alumnos.add(alumno);
+            }
+        }catch(SQLException sqle) {
+            System.out.println(sqle.getMessage());
+        }
+        
+        return alumnos;
+    }
 }

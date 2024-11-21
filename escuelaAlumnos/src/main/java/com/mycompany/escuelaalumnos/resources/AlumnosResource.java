@@ -46,7 +46,7 @@ public class AlumnosResource {
             }
         }
     }
-    
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -124,6 +124,25 @@ public class AlumnosResource {
         try {
             alumnos = new AlumnoDAO();
             List<Alumno> lAlumnos = alumnos.obtenerAlumnos();
+            return Response.ok(lAlumnos).build();
+        }catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error al obtener la lista de alumnos").build();
+        }finally {
+            if(alumnos != null) {
+                Conexion.cerrarConexion();
+            }
+        }
+    }
+    
+    @GET
+    @Path("padre/{padreId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAlumnosPorPadre(@PathParam("padreId") int padreId) {
+        IAlumnoDAO alumnos = null;
+        
+       try {
+            alumnos = new AlumnoDAO();
+            List<Alumno> lAlumnos = alumnos.obtenerAlumnosPorPadre(padreId);
             return Response.ok(lAlumnos).build();
         }catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error al obtener la lista de alumnos").build();
