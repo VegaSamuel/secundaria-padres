@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,7 +76,7 @@ public class AlumnoDAO implements IAlumnoDAO {
     public Alumno agregarAlumno(Alumno alumno) {
         String sql = "INSERT INTO alumnos(nombre, apellido, email, padre_id) VALUES(?, ?, ?, ?)";
         
-        try(PreparedStatement stmt = conexion.prepareStatement(sql)) {
+        try(PreparedStatement stmt = conexion.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, alumno.getNombre());
             stmt.setString(2, alumno.getApellido());
             stmt.setString(3, alumno.getEmail());

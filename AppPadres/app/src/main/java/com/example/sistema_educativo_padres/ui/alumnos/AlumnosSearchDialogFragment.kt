@@ -105,9 +105,12 @@ class AlumnosSearchDialogFragment : DialogFragment() {
             val apellido = parts.drop(1).joinToString(" ")
 
             val padreId = getPadreId(padre.getCurrentUserEmail())
-            Log.w("Padre ID", padreId.toString())
 
-            alumnos.add(Alumno(i+1, nombre, apellido, email, padreId ?: -1))
+            if (padreId != null) {
+                if(!nombre.equals("Administrador")) {
+                    alumnos.add(Alumno(i+1, nombre, apellido, email, padreId))
+                }
+            }
         }
 
         return alumnos
@@ -119,7 +122,7 @@ class AlumnosSearchDialogFragment : DialogFragment() {
         jsonBody.put("nombre", alumno.nombre)
         jsonBody.put("apellido", alumno.apellido)
         jsonBody.put("email", alumno.email)
-        jsonBody.put("padre_id", alumno.padre)
+        jsonBody.put("idPadre", alumno.padre)
 
         val requestBody = jsonBody.toString().toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
         val request = Request.Builder().url(url).post(requestBody).build()
