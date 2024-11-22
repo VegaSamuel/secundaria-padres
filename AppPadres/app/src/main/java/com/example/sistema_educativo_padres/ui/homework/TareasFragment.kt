@@ -10,11 +10,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.sistema_educativo_padres.R
 import com.example.sistema_educativo_padres.data.Alumno
 import com.example.sistema_educativo_padres.databinding.FragmentTareasBinding
 import com.example.sistema_educativo_padres.adapters.AlumnoTareasAdapter
-import com.example.sistema_educativo_padres.ui.alumnos.AlumnoTabsFragment
 import com.example.sistema_educativo_padres.ui.login.LoginActivity
 
 class TareasFragment : Fragment() {

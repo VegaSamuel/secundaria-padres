@@ -1,4 +1,4 @@
-package com.example.sistema_educativo_padres.ui.alumnos
+package com.example.sistema_educativo_padres.adapters
 
 import android.view.LayoutInflater
 import android.view.View
