@@ -40,6 +40,19 @@ class TareasViewModel : ViewModel() {
         }
     }
 
+    fun recargarAlumnos(correo: String) {
+        viewModelScope.launch {
+            val padreId = getPadreId(correo)
+            if(padreId != null) {
+                val nuevosAlumnos = getAlumnosList(padreId)
+                _alumnos.value = emptyList()
+                _alumnos.postValue(nuevosAlumnos ?: emptyList())
+            }else {
+                _alumnos.postValue(emptyList())
+            }
+        }
+    }
+
     private suspend fun getPadreId(correo: String): Int? {
         val url = "http://192.168.0.10:8080/escuelaPadres/api/padres/correo/$correo"
 

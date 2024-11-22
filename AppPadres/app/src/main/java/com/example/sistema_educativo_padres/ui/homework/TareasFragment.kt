@@ -1,10 +1,12 @@
 package com.example.sistema_educativo_padres.ui.homework
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -29,7 +31,7 @@ class TareasFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        tareasViewModel = ViewModelProvider(this)[TareasViewModel::class.java]
+        tareasViewModel = ViewModelProvider(requireActivity())[TareasViewModel::class.java]
 
         _binding = FragmentTareasBinding.inflate(inflater, container, false)
         val root: View = binding.root
@@ -57,6 +59,22 @@ class TareasFragment : Fragment() {
 
         return root
     }
+
+    /*
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        Log.w("Tareas", "onViewCreated ejecutado, registrando listener")
+
+        setFragmentResultListener("alumno_added") {_, bundle ->
+            Log.w("Tareas", "Resultado recibido")
+            val status = bundle.getString("status")
+            if(status == "alumno_agregado") {
+                Log.w("Tareas", "Alumno agregado, recargando alumnos")
+                val currentEmail = padre.getCurrentUserEmail()
+                tareasViewModel.recargarAlumnos(currentEmail)
+            }
+        }
+    }*/
 
     override fun onDestroyView() {
         super.onDestroyView()

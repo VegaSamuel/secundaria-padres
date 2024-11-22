@@ -9,13 +9,19 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.setFragmentResult
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sistema_educativo_padres.R
 import com.example.sistema_educativo_padres.data.Alumno
+import com.example.sistema_educativo_padres.ui.homework.TareasFragment
+import com.example.sistema_educativo_padres.ui.homework.TareasViewModel
 import com.example.sistema_educativo_padres.ui.login.LoginActivity
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.Call
@@ -36,10 +42,16 @@ import java.net.URL
 class AlumnosSearchDialogFragment : DialogFragment() {
     private lateinit var searchField: EditText
     private lateinit var alumnosList: RecyclerView
+    private val tareas: TareasViewModel by lazy {
+        ViewModelProvider(requireActivity())[TareasViewModel::class.java]
+    }
     private val padre = LoginActivity()
     private val addAlumnosAdapter = AddAlumnosAdapter { alumno ->
-        addAlumnoToDatabase(alumno)
-        dismiss()
+        lifecycleScope.launch {
+            addAlumnoToDatabase(alumno)
+            tareas.recargarAlumnos(padre.getCurrentUserEmail())
+            dismiss()
+        }
     }
 
     private val client = OkHttpClient()
@@ -137,7 +149,7 @@ class AlumnosSearchDialogFragment : DialogFragment() {
         return alumnos
     }
 
-    private fun addAlumnoToDatabase(alumno: Alumno) {
+    private suspend fun addAlumnoToDatabase(alumno: Alumno) {
         val url = "http://192.168.0.10:8080/escuelaAlumnos/api/alumnos"
         val jsonBody = JSONObject()
         jsonBody.put("nombre", alumno.nombre)
@@ -164,6 +176,8 @@ class AlumnosSearchDialogFragment : DialogFragment() {
         })
 
         Toast.makeText(requireContext(), "Alumno agregado", Toast.LENGTH_SHORT).show()
+
+        delay(1000)
     }
 
     private suspend fun getPadreId(correo: String): Int? {
