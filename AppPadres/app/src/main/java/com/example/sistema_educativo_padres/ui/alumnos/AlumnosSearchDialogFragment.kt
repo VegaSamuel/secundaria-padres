@@ -9,15 +9,13 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.setFragmentResult
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sistema_educativo_padres.R
+import com.example.sistema_educativo_padres.adapters.AddAlumnosAdapter
 import com.example.sistema_educativo_padres.data.Alumno
-import com.example.sistema_educativo_padres.ui.homework.TareasFragment
 import com.example.sistema_educativo_padres.ui.homework.TareasViewModel
 import com.example.sistema_educativo_padres.ui.login.LoginActivity
 import kotlinx.coroutines.Dispatchers

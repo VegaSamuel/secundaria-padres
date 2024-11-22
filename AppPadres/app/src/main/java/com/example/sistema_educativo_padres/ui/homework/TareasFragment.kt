@@ -1,18 +1,20 @@
 package com.example.sistema_educativo_padres.ui.homework
 
+import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.sistema_educativo_padres.R
 import com.example.sistema_educativo_padres.data.Alumno
 import com.example.sistema_educativo_padres.databinding.FragmentTareasBinding
-import com.example.sistema_educativo_padres.ui.alumnos.AlumnoTareasAdapter
+import com.example.sistema_educativo_padres.adapters.AlumnoTareasAdapter
+import com.example.sistema_educativo_padres.ui.alumnos.AlumnoTabsFragment
 import com.example.sistema_educativo_padres.ui.login.LoginActivity
 
 class TareasFragment : Fragment() {
@@ -26,6 +28,7 @@ class TareasFragment : Fragment() {
     private lateinit var tareasViewModel: TareasViewModel
     private lateinit var alumnosAdapter: AlumnoTareasAdapter
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -59,22 +62,6 @@ class TareasFragment : Fragment() {
 
         return root
     }
-
-    /*
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        Log.w("Tareas", "onViewCreated ejecutado, registrando listener")
-
-        setFragmentResultListener("alumno_added") {_, bundle ->
-            Log.w("Tareas", "Resultado recibido")
-            val status = bundle.getString("status")
-            if(status == "alumno_agregado") {
-                Log.w("Tareas", "Alumno agregado, recargando alumnos")
-                val currentEmail = padre.getCurrentUserEmail()
-                tareasViewModel.recargarAlumnos(currentEmail)
-            }
-        }
-    }*/
 
     override fun onDestroyView() {
         super.onDestroyView()
