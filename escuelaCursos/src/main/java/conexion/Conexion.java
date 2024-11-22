@@ -9,7 +9,7 @@ import java.sql.SQLException;
  * @author Samuel Vega
  */
 public class Conexion {
-    private static final String URL = "jdbc:mysql://localhost:3306/escuela_padres?autoReconnect=true&useSSL=false";
+    private static final String URL = "jdbc:mysql://localhost:3306/escuela_cursos?autoReconnect=true&useSSL=false";
     private static final String USER = "root";
     private static final String PASSWORD = "";
     private static Connection conexion = null;
