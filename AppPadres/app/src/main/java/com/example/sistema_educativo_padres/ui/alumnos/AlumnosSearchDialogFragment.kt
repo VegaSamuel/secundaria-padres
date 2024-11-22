@@ -37,7 +37,7 @@ class AlumnosSearchDialogFragment : DialogFragment() {
     private lateinit var searchField: EditText
     private lateinit var alumnosList: RecyclerView
     private val padre = LoginActivity()
-    private val alumnosAdapter = AlumnosAdapter { alumno ->
+    private val addAlumnosAdapter = AddAlumnosAdapter { alumno ->
         addAlumnoToDatabase(alumno)
         dismiss()
     }
@@ -55,7 +55,7 @@ class AlumnosSearchDialogFragment : DialogFragment() {
         alumnosList = view.findViewById(R.id.alumnos_list)
 
         alumnosList.layoutManager = LinearLayoutManager(requireContext())
-        alumnosList.adapter = alumnosAdapter
+        alumnosList.adapter = addAlumnosAdapter
 
         searchField.addTextChangedListener { text ->
             fetchAlumnosFromMoodle(text.toString())
@@ -66,7 +66,11 @@ class AlumnosSearchDialogFragment : DialogFragment() {
 
     private fun fetchAlumnosFromMoodle(query: String) {
         val url =
-            "http://192.168.0.10/moodle/webservice/rest/server.php?wstoken=d2ed34a3369de1231f2b8cf8a4bd4059&wsfunction=core_user_search_identity&query=$query&moodlewsrestformat=json"
+            "http://192.168.0.10/moodle/webservice/rest/server.php?" +
+                    "wstoken=d2ed34a3369de1231f2b8cf8a4bd4059" +
+                    "&wsfunction=core_user_search_identity" +
+                    "&query=$query" +
+                    "&moodlewsrestformat=json"
 
         lifecycleScope.launch {
             try {
@@ -85,7 +89,7 @@ class AlumnosSearchDialogFragment : DialogFragment() {
                 }
 
                 val alumnos = parseAlumnos(respuesta)
-                alumnosAdapter.submitList(alumnos)
+                addAlumnosAdapter.submitList(alumnos)
             } catch (e: Exception) {
                 e.printStackTrace()
                 Toast.makeText(
