@@ -24,5 +24,9 @@
     <string name="register_button">Registrarse con correo</string>
     <string name="login_google_button">Iniciar Sesión con Google</string>
 
+    <string name="tarea_title">Titulo de tarea</string>
+    <string name="tarea_date">Fecha de entrega</string>
+    <string name="tarea_course">Curso correspondiente</string>
+
     <string name="api_key">978695257819-q5vj2ckko3mois6gfbjlaaqdrvtg5ghh.apps.googleusercontent.com</string>
 </resources>

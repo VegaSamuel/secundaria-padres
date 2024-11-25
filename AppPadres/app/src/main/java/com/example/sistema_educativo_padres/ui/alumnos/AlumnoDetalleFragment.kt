@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.example.sistema_educativo_padres.R
+import com.example.sistema_educativo_padres.ui.tareas.PendientesFragment
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import java.lang.IllegalStateException
@@ -47,7 +48,7 @@ class TareasPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
 
     override fun createFragment(position: Int): Fragment {
         return when(position) {
-            0 -> Fragment()
+            0 -> PendientesFragment()
             1 -> Fragment()
             else -> throw IllegalStateException("Posición invalida")
         }
