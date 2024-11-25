@@ -58,6 +58,8 @@ dependencies {
     implementation("com.squareup.moshi:moshi:1.12.0")
     implementation(libs.androidx.activity)
     implementation(libs.firebase.auth.ktx)
+    implementation(libs.androidx.legacy.support.v4)
+    implementation(libs.androidx.fragment.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

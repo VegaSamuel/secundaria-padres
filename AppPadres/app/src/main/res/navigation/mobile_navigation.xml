@@ -9,7 +9,12 @@
         android:id="@+id/nav_tareas"
         android:name="com.example.sistema_educativo_padres.ui.homework.TareasFragment"
         android:label="@string/menu_tareas"
-        tools:layout="@layout/fragment_tareas" />
+        tools:layout="@layout/fragment_tareas" >
+
+        <action
+            android:id="@+id/action_nav_tareas_to_nav_alumno_detalle_fragment"
+            app:destination="@+id/nav_alumno_detalle_fragment"/>
+    </fragment>
 
     <fragment
         android:id="@+id/nav_gallery"
@@ -22,4 +27,15 @@
         android:name="com.example.sistema_educativo_padres.ui.signout.SignoutFragment"
         android:label="@string/menu_signout"
         tools:layout="@layout/fragment_signout" />
+
+    <fragment
+        android:id="@+id/nav_alumno_detalle_fragment"
+        android:name="com.example.sistema_educativo_padres.ui.alumnos.AlumnoDetalleFragment"
+        android:label="@string/tab_title"
+        tools:layout="@layout/fragment_alumno_detalle" >
+
+        <argument
+            android:name="alumnoId"
+            app:argType="string"/>
+    </fragment>
 </navigation>

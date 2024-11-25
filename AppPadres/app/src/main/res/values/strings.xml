@@ -11,6 +11,8 @@
     <string name="menu_gallery">Gallery</string>
     <string name="menu_signout">Cerrar sesión</string>
 
+    <string name="tab_title">Detalle Alumno</string>
+
     <string name="alumno_search">Buscar alumno...</string>
     <string name="alumno_name">Nombre del alumno</string>
     <string name="add_button">Agregar</string>

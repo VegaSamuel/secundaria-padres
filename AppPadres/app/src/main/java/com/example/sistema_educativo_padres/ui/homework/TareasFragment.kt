@@ -8,11 +8,14 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.sistema_educativo_padres.R
 import com.example.sistema_educativo_padres.data.Alumno
 import com.example.sistema_educativo_padres.databinding.FragmentTareasBinding
 import com.example.sistema_educativo_padres.adapters.AlumnoTareasAdapter
+import com.example.sistema_educativo_padres.ui.alumnos.AlumnoDetalleFragment
 import com.example.sistema_educativo_padres.ui.login.LoginActivity
 
 class TareasFragment : Fragment() {
@@ -67,6 +70,9 @@ class TareasFragment : Fragment() {
     }
 
     private fun onAlumnoSelected(alumno: Alumno) {
-
+        val bundle = Bundle().apply {
+            putString("alumnoId", alumno.id.toString())
+        }
+        findNavController().navigate(R.id.action_nav_tareas_to_nav_alumno_detalle_fragment, bundle)
     }
 }

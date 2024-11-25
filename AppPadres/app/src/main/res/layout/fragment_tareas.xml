@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.homework.TareasFragment">
+    tools:context=".ui.homework.TareasFragment"
+    android:id="@+id/fragment_container">
 
     <TextView
         android:id="@+id/text_home"
@@ -21,4 +22,5 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone" />
+
 </LinearLayout>
