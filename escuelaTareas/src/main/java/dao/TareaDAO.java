@@ -24,7 +24,7 @@ public class TareaDAO implements ITareaDAO {
     
     @Override
     public Tarea obten(int id) {
-        String sql = "SELECT id, nombre, avalado_padre, curso_id FROM tareas WHERE id = ?";
+        String sql = "SELECT id, nombre, fecha_entrega, calificacion, avalado_padre, curso_id FROM tareas WHERE id = ?";
         Tarea tarea = new Tarea();
         
         try(
@@ -36,6 +36,8 @@ public class TareaDAO implements ITareaDAO {
                 if(rs.next()) {
                     tarea.setId(id);
                     tarea.setNombre(rs.getString("nombre"));
+                    tarea.setFechaEntrega(rs.getDate("fecha_entrega"));
+                    tarea.setCalificacion(rs.getFloat("calificacion"));
                     tarea.setAvaladoPadre(rs.getInt("avalado_padre"));
                     tarea.setIdCurso(rs.getInt("curso_id"));
                 }
@@ -49,14 +51,16 @@ public class TareaDAO implements ITareaDAO {
 
     @Override
     public Tarea agregarTarea(Tarea tarea) {
-        String sql = "INSERT INTO tareas(nombre, avalado_padre, curso_id) VALUES(?, ?, ?)";
+        String sql = "INSERT INTO tareas(nombre, fecha_entrega, calificacion, avalado_padre, curso_id) VALUES(?, ?, ?, ?, ?)";
         
         try(
             PreparedStatement stmt = conexion.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
         ) {
             stmt.setString(1, tarea.getNombre());
-            stmt.setInt(2, tarea.getAvaladoPadre());
-            stmt.setInt(3, tarea.getIdCurso());
+            stmt.setDate(2, tarea.getFechaEntrega());
+            stmt.setFloat(3, tarea.getCalificacion());
+            stmt.setInt(4, tarea.getAvaladoPadre());
+            stmt.setInt(5, tarea.getIdCurso());
             stmt.executeUpdate();
             
             try(ResultSet llaves = stmt.getGeneratedKeys()) {
@@ -73,15 +77,17 @@ public class TareaDAO implements ITareaDAO {
 
     @Override
     public Tarea modificarTarea(Tarea tarea) {
-        String sql = "UPDATE tareas SET nombre = ?, avalado_padre = ?, curso_id = ? WHERE id = ?";
+        String sql = "UPDATE tareas SET nombre = ?, fecha_entrega = ?, calificacion = ?, avalado_padre = ?, curso_id = ? WHERE id = ?";
         
         try (
             PreparedStatement stmt = conexion.prepareStatement(sql)
         ) {
             stmt.setString(1, tarea.getNombre());
-            stmt.setInt(2, tarea.getAvaladoPadre());
-            stmt.setInt(3, tarea.getIdCurso());
-            stmt.setInt(4, tarea.getId());
+            stmt.setDate(2, tarea.getFechaEntrega());
+            stmt.setFloat(3, tarea.getCalificacion());
+            stmt.setInt(4, tarea.getAvaladoPadre());
+            stmt.setInt(5, tarea.getIdCurso());
+            stmt.setInt(6, tarea.getId());
             
             int afectadas = stmt.executeUpdate();
             
@@ -124,7 +130,7 @@ public class TareaDAO implements ITareaDAO {
     @Override
     public List<Tarea> obtenerTareas() {
         List<Tarea> tareas = new ArrayList<>();
-        String sql = "SELECT id, nombre, avalado_padre, curso_id FROM tareas";
+        String sql = "SELECT id, nombre, fecha_entrega, calificacion, avalado_padre, curso_id FROM tareas";
         
         try (
             PreparedStatement stmt = conexion.prepareStatement(sql);
@@ -134,6 +140,8 @@ public class TareaDAO implements ITareaDAO {
                 Tarea tarea = new Tarea();
                 tarea.setId(rs.getInt("id"));
                 tarea.setNombre(rs.getString("nombre"));
+                tarea.setFechaEntrega(rs.getDate("fecha_entrega"));
+                tarea.setCalificacion(rs.getFloat("calificacion"));
                 tarea.setAvaladoPadre(rs.getInt("avalado_padre"));
                 tarea.setIdCurso(rs.getInt("curso_id"));
                 tareas.add(tarea);

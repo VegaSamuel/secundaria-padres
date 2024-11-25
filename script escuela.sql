@@ -43,6 +43,8 @@ use escuela_tareas;
 create table tareas(
 	id int primary key auto_increment,
     nombre varchar(100) not null,
+    fecha_entrega datetime,
+    calificacion float,
     avalado_padre boolean not null default false,
     curso_id int not null
 );

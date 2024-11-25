@@ -1,5 +1,7 @@
 package dominio;
 
+import java.sql.Date;
+
 /**
  *
  * @author Samuel Vega
@@ -7,14 +9,18 @@ package dominio;
 public class Tarea {
     private int id;
     private String nombre;
+    private Date fechaEntrega;
+    private float calificacion;
     private int avaladoPadre;
     private int idCurso;
 
     public Tarea() {}
 
-    public Tarea(int id, String nombre, int avaladoPadre, int idCurso) {
+    public Tarea(int id, String nombre, Date fechaEntrega, float calificacion, int avaladoPadre, int idCurso) {
         this.id = id;
         this.nombre = nombre;
+        this.fechaEntrega = fechaEntrega;
+        this.calificacion = calificacion;
         this.avaladoPadre = avaladoPadre;
         this.idCurso = idCurso;
     }
@@ -39,6 +45,22 @@ public class Tarea {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    public Date getFechaEntrega() {
+        return fechaEntrega;
+    }
+
+    public void setFechaEntrega(Date fechaEntrega) {
+        this.fechaEntrega = fechaEntrega;
+    }
+
+    public float getCalificacion() {
+        return calificacion;
+    }
+
+    public void setCalificacion(float calificacion) {
+        this.calificacion = calificacion;
     }
 
     public int getAvaladoPadre() {
