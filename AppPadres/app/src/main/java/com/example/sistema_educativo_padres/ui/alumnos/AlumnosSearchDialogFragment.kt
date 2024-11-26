@@ -49,8 +49,9 @@ class AlumnosSearchDialogFragment : DialogFragment() {
     private val addAlumnosAdapter = AddAlumnosAdapter { alumno ->
         lifecycleScope.launch {
             addAlumnoToDatabase(alumno)
-            //getCursosFromMoodle(alumno)
+            getCursosFromMoodle(alumno)
             tareas.recargarAlumnos(padre.getCurrentUserEmail())
+            delay(5000)
             dismiss()
         }
     }
@@ -132,18 +133,14 @@ class AlumnosSearchDialogFragment : DialogFragment() {
             val parts = fullname.split(" ")
             val nombre = parts.firstOrNull() ?: fullname
             val apellido = parts.drop(1).joinToString(" ")
-            var alumno = Alumno(0, "", "", "", 0)
 
             if (padreId != null) {
                 if (!nombre.equals("Administrador")) {
-                    alumno = Alumno(id, nombre, apellido, email, padreId)
-                    alumnos.add(alumno)
-                }
-            }
+                    val alumno = Alumno(id, nombre, apellido, email, padreId)
 
-            for (j in 0 until listAlumnosDB.size) {
-                if(alumno.padre == listAlumnosDB[j].padre && alumno.nombre == listAlumnosDB[j].nombre) {
-                    alumnos.remove(alumno)
+                    if(listAlumnosDB.none {it.nombre == alumno.nombre && it.apellido == alumno.apellido && it.padre == alumno.padre}) {
+                        alumnos.add(alumno)
+                    }
                 }
             }
         }
@@ -160,8 +157,6 @@ class AlumnosSearchDialogFragment : DialogFragment() {
 
         lifecycleScope.launch {
             try {
-                if (!isAdded) return@launch
-
                 val cursos = withContext(Dispatchers.IO) {
                     val urlConnection = URL(url).openConnection() as HttpURLConnection
                     urlConnection.requestMethod = "GET"
@@ -169,6 +164,8 @@ class AlumnosSearchDialogFragment : DialogFragment() {
                     if (urlConnection.responseCode == HttpURLConnection.HTTP_OK) {
                         val inputStream = BufferedReader(InputStreamReader(urlConnection.inputStream))
                         val responseText = inputStream.use { it.readText() }
+
+                        Log.d("Cursos", responseText)
 
                         val cursosJSONArray = JSONArray(responseText)
                         val cursosList = mutableListOf<Curso>()
@@ -190,6 +187,7 @@ class AlumnosSearchDialogFragment : DialogFragment() {
                 }
 
                 for (curso in cursos) {
+                    Log.d("Lista de cursos", cursos.toString())
                     addCursosToDatabase(curso)
                     getTareasFromMoodle(curso)
                 }
@@ -204,7 +202,7 @@ class AlumnosSearchDialogFragment : DialogFragment() {
         }
     }
 
-    private suspend fun getTareasFromMoodle(curso: Curso) {
+    private fun getTareasFromMoodle(curso: Curso) {
         val url = "http://192.168.0.10/moodle/webservice/rest/server.php?" +
                 "wstoken=d2ed34a3369de1231f2b8cf8a4bd4059&" +
                 "wsfunction=mod_assign_get_assignments&" +
@@ -213,36 +211,38 @@ class AlumnosSearchDialogFragment : DialogFragment() {
 
         lifecycleScope.launch {
             try {
-                val urlConnection = URL(url).openConnection() as HttpURLConnection
-                urlConnection.requestMethod = "GET"
+                withContext(Dispatchers.IO) {
+                    val urlConnection = URL(url).openConnection() as HttpURLConnection
+                    urlConnection.requestMethod = "GET"
 
-                if (urlConnection.responseCode == HttpURLConnection.HTTP_OK) {
-                    val inputStream = BufferedReader(InputStreamReader(urlConnection.inputStream))
-                    val responseText = inputStream.use { it.readText() }
+                    if (urlConnection.responseCode == HttpURLConnection.HTTP_OK) {
+                        val inputStream = BufferedReader(InputStreamReader(urlConnection.inputStream))
+                        val responseText = inputStream.use { it.readText() }
 
-                    val responseJson = JSONObject(responseText)
-                    val cursosArray = responseJson.getJSONArray("courses")
+                        val responseJson = JSONObject(responseText)
+                        val cursosArray = responseJson.getJSONArray("courses")
 
-                    for (i in 0 until cursosArray.length()) {
-                        val cursoJson = cursosArray.getJSONObject(i)
-                        val tareasArray = cursoJson.getJSONArray("assignments")
+                        for (i in 0 until cursosArray.length()) {
+                            val cursoJson = cursosArray.getJSONObject(i)
+                            val tareasArray = cursoJson.getJSONArray("assignments")
 
-                        for (j in 0 until tareasArray.length()) {
-                            val tareaJson = tareasArray.getJSONObject(j)
-                            addTareaToDatabase(
-                                Tarea(
-                                    id = tareaJson.getInt("id"),
-                                    titulo = tareaJson.getString("name"),
-                                    fechaEntrega = tareaJson.optLong("duedate", 0L),
-                                    calificacion = 0.0f,
-                                    avalada = 0,
-                                    curso = cursoJson.getInt("id")
+                            for (j in 0 until tareasArray.length()) {
+                                val tareaJson = tareasArray.getJSONObject(j)
+                                addTareaToDatabase(
+                                    Tarea(
+                                        id = tareaJson.getInt("id"),
+                                        titulo = tareaJson.getString("name"),
+                                        fechaEntrega = tareaJson.optLong("duedate", 0L),
+                                        calificacion = 0.0f,
+                                        avalada = 0,
+                                        curso = curso.id
+                                    )
                                 )
-                            )
+                            }
                         }
+                    }else {
+                        throw Exception("Error en la respuesta: ${urlConnection.responseCode}")
                     }
-                }else {
-                    throw Exception("Error en la respuesta: ${urlConnection.responseCode}")
                 }
             }catch (e: Exception) {
                 e.printStackTrace()
@@ -321,7 +321,7 @@ class AlumnosSearchDialogFragment : DialogFragment() {
         jsonBody.put("fecha_entrega", tarea.fechaEntrega)
         jsonBody.put("calificacion", tarea.calificacion)
         jsonBody.put("avalado_padre", tarea.avalada)
-        jsonBody.put("curso_id", tarea.curso)
+        jsonBody.put("idCurso", tarea.curso)
 
         val requestBody = jsonBody.toString().toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
         val request = Request.Builder().url(url).post(requestBody).build()

@@ -23,11 +23,11 @@ public class TareasResources {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getTarea(@PathParam("id") int id) {
-        ITareaDAO padres = null;
+        ITareaDAO tareas = null;
         
         try {
-            padres = new TareaDAO();
-            Tarea padre = padres.obten(id);
+            tareas = new TareaDAO();
+            Tarea padre = tareas.obten(id);
             
             if(padre != null) {
                 return Response.ok(padre).build();
@@ -37,7 +37,7 @@ public class TareasResources {
         }catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error al obtener la tarea").build();
         }finally {
-            if(padres != null) {
+            if(tareas != null) {
                 Conexion.cerrarConexion();
             }
         }

@@ -19,7 +19,7 @@ public class CursoDAO implements ICursoDAO {
     private final Connection conexion;
     
     public CursoDAO() {
-        this.conexion = Conexion.getConexion();
+        conexion = Conexion.getConexion();
     }
 
     @Override
@@ -28,7 +28,7 @@ public class CursoDAO implements ICursoDAO {
         Curso curso = new Curso();
         
         try(
-            PreparedStatement stmt = conexion.prepareCall(sql)
+            PreparedStatement stmt = conexion.prepareStatement(sql)
         ) {
             stmt.setInt(1, id);
             
@@ -64,12 +64,13 @@ public class CursoDAO implements ICursoDAO {
 
     @Override
     public Curso modificarCurso(Curso curso) {
-        String sql = "UPDATE cursos SET nombre = ?";
+        String sql = "UPDATE cursos SET nombre = ? WHERE = ?";
         
         try(
             PreparedStatement stmt = conexion.prepareStatement(sql)
         ) {
             stmt.setString(1, curso.getNombre());
+            stmt.setInt(2, curso.getId());
             
             int afectadas = stmt.executeUpdate();
             

@@ -16,10 +16,6 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.List;
 
-/**
- *
- * @author Samuel Vega
- */
 @Path("/cursos")
 public class CursosResource {
     
@@ -119,16 +115,16 @@ public class CursosResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getCursos() {
-        ICursoDAO padres = null;
+        ICursoDAO cursos = null;
         
         try {
-            padres = new CursoDAO();
-            List<Curso> lCursos = padres.obtenerCursos();
+            cursos = new CursoDAO();
+            List<Curso> lCursos = cursos.obtenerCursos();
             return Response.ok(lCursos).build();
         }catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error al obtener la lista de padres").build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error al obtener la lista de cursos").build();
         }finally {
-            if(padres != null) {
+            if(cursos != null) {
                 Conexion.cerrarConexion();
             }
         }
