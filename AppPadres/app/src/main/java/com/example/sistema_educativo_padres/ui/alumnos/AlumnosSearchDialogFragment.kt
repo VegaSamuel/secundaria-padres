@@ -51,7 +51,7 @@ class AlumnosSearchDialogFragment : DialogFragment() {
             addAlumnoToDatabase(alumno)
             getCursosFromMoodle(alumno)
             tareas.recargarAlumnos(padre.getCurrentUserEmail())
-            delay(5000)
+            delay(3000)
             dismiss()
         }
     }
@@ -187,9 +187,8 @@ class AlumnosSearchDialogFragment : DialogFragment() {
                 }
 
                 for (curso in cursos) {
-                    Log.d("Lista de cursos", cursos.toString())
-                    addCursosToDatabase(curso)
-                    getTareasFromMoodle(curso)
+                    addCursosToDatabase(curso, alumno)
+                    getTareasFromMoodle(curso, alumno)
                 }
             }catch (e: Exception) {
                 e.printStackTrace()
@@ -202,7 +201,7 @@ class AlumnosSearchDialogFragment : DialogFragment() {
         }
     }
 
-    private fun getTareasFromMoodle(curso: Curso) {
+    private fun getTareasFromMoodle(curso: Curso, alumno: Alumno) {
         val url = "http://192.168.0.10/moodle/webservice/rest/server.php?" +
                 "wstoken=d2ed34a3369de1231f2b8cf8a4bd4059&" +
                 "wsfunction=mod_assign_get_assignments&" +
@@ -235,7 +234,7 @@ class AlumnosSearchDialogFragment : DialogFragment() {
                                         fechaEntrega = tareaJson.optLong("duedate", 0L),
                                         calificacion = 0.0f,
                                         avalada = 0,
-                                        curso = curso.id
+                                        curso = getAlumnoCursosId(curso, alumno)!!
                                     )
                                 )
                             }
@@ -283,18 +282,16 @@ class AlumnosSearchDialogFragment : DialogFragment() {
         })
 
         Toast.makeText(requireContext(), "Alumno agregado", Toast.LENGTH_SHORT).show()
-
-        delay(1000)
     }
 
-    private suspend fun addCursosToDatabase(curso: Curso) {
-        val url = "http://192.168.0.10:8080/escuelaCursos/api/cursos"
-        val jsonBody = JSONObject()
+    private suspend fun addCursosToDatabase(curso: Curso, alumno: Alumno) {
+        var url = "http://192.168.0.10:8080/escuelaCursos/api/cursos"
+        var jsonBody = JSONObject()
         jsonBody.put("id", curso.id)
         jsonBody.put("nombre", curso.nombre)
 
-        val requestBody = jsonBody.toString().toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
-        val request = Request.Builder().url(url).post(requestBody).build()
+        var requestBody = jsonBody.toString().toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
+        var request = Request.Builder().url(url).post(requestBody).build()
 
         client.newCall(request).enqueue(object : Callback {
             override fun onResponse(call: Call, response: Response) {
@@ -310,7 +307,28 @@ class AlumnosSearchDialogFragment : DialogFragment() {
             }
         })
 
-        delay(1000)
+        url = "http://192.168.0.10:8080/escuelaAlumnosCursos/api/alumnosCursos"
+        jsonBody = JSONObject()
+        jsonBody.put("idAlumno", alumno.id)
+        jsonBody.put("idCurso", curso.id)
+        jsonBody.put("calificacion", 0)
+
+        requestBody = jsonBody.toString().toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
+        request = Request.Builder().url(url).post(requestBody).build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onResponse(call: Call, response: Response) {
+                if(response.isSuccessful) {
+                    Log.d("Relación alumnno - cursos", "Cursos relacionados con los alumnos en la base de datos")
+                }else {
+                    Log.e("Relación alumnno - cursos", "Error al relacionar los cursos con su respectivo alumno en la base de datos")
+                }
+            }
+
+            override fun onFailure(call: Call, e: IOException) {
+                Log.e("Relación alumnno - cursos", "Fallo en la conexión al servicio REST", e)
+            }
+        })
     }
 
     private suspend fun addTareaToDatabase(tarea: Tarea) {
@@ -345,6 +363,30 @@ class AlumnosSearchDialogFragment : DialogFragment() {
 
     private suspend fun getPadreId(correo: String): Int? {
         val url = "http://192.168.0.10:8080/escuelaPadres/api/padres/correo/$correo"
+
+        return withContext(Dispatchers.IO) {
+            try {
+                val conexion = URL(url).openConnection() as HttpURLConnection
+                conexion.requestMethod = "GET"
+                conexion.connect()
+
+                if (conexion.responseCode == HttpURLConnection.HTTP_OK) {
+                    val responseText = conexion.inputStream.bufferedReader().use { it.readText() }
+                    val jsonResponse = JSONObject(responseText)
+
+                    jsonResponse.optInt("id", -1).takeIf { it != -1 }
+                } else {
+                    null
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
+        }
+    }
+
+    private suspend fun getAlumnoCursosId(curso: Curso, alumno: Alumno): Int? {
+        val url = "http://192.168.0.10:8080/escuelaAlumnosCursos/api/alumnosCursos/${curso.id}/alumnos/${alumno.id}"
 
         return withContext(Dispatchers.IO) {
             try {

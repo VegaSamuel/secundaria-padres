@@ -1,0 +1,7 @@
+com\mycompany\escuelaalumnoscursos\resources\AlumnosCursosResource.class
+dao\AlumnoCursoDAO.class
+interfaces\IAlumnoCursoDAO.class
+com\mycompany\escuelaalumnoscursos\JakartaRestConfiguration.class
+dominio\AlumnoCurso.class
+com\mycompany\escuelaalumnoscursos\resources\JakartaEE91Resource.class
+conexion\Conexion.class
