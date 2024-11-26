@@ -26,7 +26,7 @@ class TareasAdapter(private val tareas: List<Tarea>) : RecyclerView.Adapter<Tare
         val tarea = tareas[position]
 
         holder.titulo.text = tarea.titulo
-        holder.fecha.text = tarea.fechaEntrega
+        holder.fecha.text = tarea.fechaEntrega.toString()
         holder.curso.text = tarea.curso.toString()
     }
 

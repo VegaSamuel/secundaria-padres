@@ -74,20 +74,16 @@ public class AlumnoDAO implements IAlumnoDAO {
 
     @Override
     public Alumno agregarAlumno(Alumno alumno) {
-        String sql = "INSERT INTO alumnos(nombre, apellido, email, padre_id) VALUES(?, ?, ?, ?)";
+        String sql = "INSERT INTO alumnos(id, nombre, apellido, email, padre_id) VALUES(?, ?, ?, ?, ?)";
         
         try(PreparedStatement stmt = conexion.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            stmt.setString(1, alumno.getNombre());
-            stmt.setString(2, alumno.getApellido());
-            stmt.setString(3, alumno.getEmail());
-            stmt.setInt(4, alumno.getIdPadre());
+            stmt.setInt(1, alumno.getId());
+            stmt.setString(2, alumno.getNombre());
+            stmt.setString(3, alumno.getApellido());
+            stmt.setString(4, alumno.getEmail());
+            stmt.setInt(5, alumno.getIdPadre());
             stmt.executeUpdate();
             
-            try(ResultSet llaves = stmt.getGeneratedKeys()) {
-                if(llaves.next()) {
-                    alumno.setId(llaves.getInt(1));
-                }
-            }
         }catch(SQLException sqle) {
             System.out.println(sqle.getMessage());
         }

@@ -51,16 +51,17 @@ public class TareaDAO implements ITareaDAO {
 
     @Override
     public Tarea agregarTarea(Tarea tarea) {
-        String sql = "INSERT INTO tareas(nombre, fecha_entrega, calificacion, avalado_padre, curso_id) VALUES(?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO tareas(id, nombre, fecha_entrega, calificacion, avalado_padre, curso_id) VALUES(?, ?, ?, ?, ?, ?)";
         
         try(
             PreparedStatement stmt = conexion.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
         ) {
-            stmt.setString(1, tarea.getNombre());
-            stmt.setDate(2, tarea.getFechaEntrega());
-            stmt.setFloat(3, tarea.getCalificacion());
-            stmt.setInt(4, tarea.getAvaladoPadre());
-            stmt.setInt(5, tarea.getIdCurso());
+            stmt.setInt(1, tarea.getId());
+            stmt.setString(2, tarea.getNombre());
+            stmt.setDate(3, tarea.getFechaEntrega());
+            stmt.setFloat(4, tarea.getCalificacion());
+            stmt.setInt(5, tarea.getAvaladoPadre());
+            stmt.setInt(6, tarea.getIdCurso());
             stmt.executeUpdate();
             
             try(ResultSet llaves = stmt.getGeneratedKeys()) {

@@ -47,19 +47,14 @@ public class CursoDAO implements ICursoDAO {
 
     @Override
     public Curso agregarCurso(Curso curso) {
-        String sql = "INSERT INTO cursos(nombre) VALUES (?)";
+        String sql = "INSERT INTO cursos(id, nombre) VALUES (?, ?)";
         
         try(
             PreparedStatement stmt = conexion.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
         ) {
-            stmt.setString(1, curso.getNombre());
+            stmt.setInt(1, curso.getId());
+            stmt.setString(2, curso.getNombre());
             stmt.executeUpdate();
-            
-            try(ResultSet llaves = stmt.getGeneratedKeys()) {
-                if(llaves.next()) {
-                    curso.setId(llaves.getInt(1));
-                }
-            }
         }catch(SQLException sqle) {
             System.out.println(sqle.getMessage());
         }
