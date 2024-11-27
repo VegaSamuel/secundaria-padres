@@ -18,7 +18,7 @@ public class JWTUtil {
             return Jwts.builder()
                 .setSubject(username)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 3600000))
+                .setExpiration(new Date(System.currentTimeMillis() + 1800000))
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
                 .compact();
         }catch(InvalidKeyException e) {

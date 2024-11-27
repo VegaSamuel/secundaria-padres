@@ -103,13 +103,18 @@ public class PadresResource {
         IPadreDAO padres = null;
         
         try {
-            //padres = new PadreDAO();
-            //Padre nuevo = padres.agregarPadre(padre);
-            
             JWTUtil jwt = new JWTUtil();
             String token = jwt.generateToken(padre.getNombre());
             
-            return Response.status(Response.Status.CREATED).header("Authorization", "Bearer " + token).build();
+            padres = new PadreDAO();
+            Padre existente = padres.obtenPorEmail(padre.getEmail());
+            if(existente != null) {
+                return Response.status(Response.Status.CREATED).header("Authorization", "Bearer " + token).entity(existente).build();
+            }else {
+                padres = new PadreDAO();
+                Padre nuevo = padres.agregarPadre(padre);
+                return Response.status(Response.Status.CREATED).header("Authorization", "Bearer " + token).entity(nuevo).build();
+            }
         }catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error al añadir al padre" + e.getMessage()).build();
         }finally {
