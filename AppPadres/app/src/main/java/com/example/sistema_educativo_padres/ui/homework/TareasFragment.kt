@@ -59,7 +59,7 @@ class TareasFragment : Fragment() {
         }
 
         val currentEmail = padre.getCurrentUserEmail()
-        tareasViewModel.cargarPadreYAlumnos(currentEmail)
+        tareasViewModel.cargarPadreYAlumnos(currentEmail, requireContext())
 
         return root
     }

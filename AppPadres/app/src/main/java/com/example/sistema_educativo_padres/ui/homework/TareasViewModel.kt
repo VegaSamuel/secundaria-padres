@@ -1,11 +1,13 @@
 package com.example.sistema_educativo_padres.ui.homework
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sistema_educativo_padres.data.Alumno
+import com.example.sistema_educativo_padres.sec.TokenManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -28,11 +30,11 @@ class TareasViewModel : ViewModel() {
     }
     val text: LiveData<String> = _text
 
-    fun cargarPadreYAlumnos(correo: String) {
+    fun cargarPadreYAlumnos(correo: String, context: Context) {
         viewModelScope.launch {
-            val padreId = getPadreId(correo)
+            val padreId = getPadreId(correo, context)
             if (padreId != null) {
-                val alumnoList = getAlumnosList(padreId)
+                val alumnoList = getAlumnosList(padreId, context)
                 _alumnos.postValue(alumnoList ?: emptyList())
             } else {
                 _alumnos.postValue(emptyList())
@@ -40,11 +42,11 @@ class TareasViewModel : ViewModel() {
         }
     }
 
-    fun recargarAlumnos(correo: String) {
+    fun recargarAlumnos(correo: String, context: Context) {
         viewModelScope.launch {
-            val padreId = getPadreId(correo)
+            val padreId = getPadreId(correo, context)
             if(padreId != null) {
-                val nuevosAlumnos = getAlumnosList(padreId)
+                val nuevosAlumnos = getAlumnosList(padreId, context)
                 _alumnos.value = emptyList()
                 _alumnos.postValue(nuevosAlumnos ?: emptyList())
             }else {
@@ -53,13 +55,15 @@ class TareasViewModel : ViewModel() {
         }
     }
 
-    private suspend fun getPadreId(correo: String): Int? {
+    private suspend fun getPadreId(correo: String, context: Context): Int? {
+        val token = TokenManager.obtenerToken(context)
         val url = "http://192.168.0.10:8080/escuelaPadres/api/padres/correo/$correo"
 
         return withContext(Dispatchers.IO) {
             try {
                 val conexion = URL(url).openConnection() as HttpURLConnection
                 conexion.requestMethod = "GET"
+                conexion.setRequestProperty("Authorization", "Bearer $token")
                 conexion.connect()
 
                 if (conexion.responseCode == HttpURLConnection.HTTP_OK) {
@@ -77,9 +81,10 @@ class TareasViewModel : ViewModel() {
         }
     }
 
-    private suspend fun getAlumnosList(idPadre: Int): List<Alumno>? {
+    private suspend fun getAlumnosList(idPadre: Int, context: Context): List<Alumno>? {
+        val token = TokenManager.obtenerToken(context)
         val url = "http://192.168.0.10:8080/escuelaAlumnos/api/alumnos/padre/$idPadre"
-        val request = Request.Builder().url(url).get().build()
+        val request = Request.Builder().url(url).header("Authorization", "Bearer $token").get().build()
 
         return withContext(Dispatchers.IO) {
             try {

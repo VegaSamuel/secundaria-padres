@@ -51,7 +51,7 @@ class AlumnosSearchDialogFragment : DialogFragment() {
         lifecycleScope.launch {
             addAlumnoToDatabase(alumno)
             getCursosFromMoodle(alumno)
-            tareas.recargarAlumnos(padre.getCurrentUserEmail())
+            tareas.recargarAlumnos(padre.getCurrentUserEmail(), requireContext())
             delay(3000)
             dismiss()
         }
