@@ -178,6 +178,8 @@ class LoginActivity : AppCompatActivity() {
         jsonBody.put("nombre", padre.nombre)
         jsonBody.put("email", padre.email)
 
+        Log.e("url", jsonBody.toString())
+
         val requestBody = jsonBody.toString().toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
         val request = Request.Builder().url(url).post(requestBody).build()
 

@@ -3,7 +3,5 @@ interfaces\IPadreDAO.class
 com\mycompany\escuelapadres\resources\JakartaEE91Resource.class
 dominio\Padre.class
 dao\PadreDAO.class
-seguridad\JWTFilter.class
 conexion\Conexion.class
 com\mycompany\escuelapadres\resources\PadresResource.class
-seguridad\JWTUtil.class
