@@ -18,6 +18,7 @@ import com.example.sistema_educativo_padres.adapters.AddAlumnosAdapter
 import com.example.sistema_educativo_padres.data.Alumno
 import com.example.sistema_educativo_padres.data.Curso
 import com.example.sistema_educativo_padres.data.Tarea
+import com.example.sistema_educativo_padres.sec.TokenManager
 import com.example.sistema_educativo_padres.ui.homework.TareasViewModel
 import com.example.sistema_educativo_padres.ui.login.LoginActivity
 import kotlinx.coroutines.Dispatchers
@@ -263,9 +264,10 @@ class AlumnosSearchDialogFragment : DialogFragment() {
         jsonBody.put("email", alumno.email)
         jsonBody.put("idPadre", alumno.padre)
 
+        val token = TokenManager.obtenerToken(requireContext())
         val requestBody =
             jsonBody.toString().toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
-        val request = Request.Builder().url(url).post(requestBody).build()
+        val request = Request.Builder().url(url).header("Authorization", "Bearer $token").post(requestBody).build()
 
         client.newCall(request).enqueue(object : Callback {
             override fun onResponse(call: Call, response: Response) {
@@ -290,8 +292,9 @@ class AlumnosSearchDialogFragment : DialogFragment() {
         jsonBody.put("id", curso.id)
         jsonBody.put("nombre", curso.nombre)
 
+        val token = TokenManager.obtenerToken(requireContext())
         var requestBody = jsonBody.toString().toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
-        var request = Request.Builder().url(url).post(requestBody).build()
+        var request = Request.Builder().url(url).header("Authorization", "Bearer $token").post(requestBody).build()
 
         client.newCall(request).enqueue(object : Callback {
             override fun onResponse(call: Call, response: Response) {
@@ -314,7 +317,7 @@ class AlumnosSearchDialogFragment : DialogFragment() {
         jsonBody.put("calificacion", 0)
 
         requestBody = jsonBody.toString().toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
-        request = Request.Builder().url(url).post(requestBody).build()
+        request = Request.Builder().url(url).header("Authorization", "Bearer $token").post(requestBody).build()
 
         client.newCall(request).enqueue(object : Callback {
             override fun onResponse(call: Call, response: Response) {
@@ -341,8 +344,9 @@ class AlumnosSearchDialogFragment : DialogFragment() {
         jsonBody.put("avalado_padre", tarea.avalada)
         jsonBody.put("idCurso", tarea.curso)
 
+        val token = TokenManager.obtenerToken(requireContext())
         val requestBody = jsonBody.toString().toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
-        val request = Request.Builder().url(url).post(requestBody).build()
+        val request = Request.Builder().url(url).header("Header", "Bearer $token").post(requestBody).build()
 
         client.newCall(request).enqueue(object : Callback {
             override fun onResponse(call: Call, response: Response) {
@@ -362,12 +366,14 @@ class AlumnosSearchDialogFragment : DialogFragment() {
     }
 
     private suspend fun getPadreId(correo: String): Int? {
+        val token = TokenManager.obtenerToken(requireContext())
         val url = "http://192.168.0.10:8080/escuelaPadres/api/padres/correo/$correo"
 
         return withContext(Dispatchers.IO) {
             try {
                 val conexion = URL(url).openConnection() as HttpURLConnection
                 conexion.requestMethod = "GET"
+                conexion.setRequestProperty("Authorization", "Bearer $token")
                 conexion.connect()
 
                 if (conexion.responseCode == HttpURLConnection.HTTP_OK) {
@@ -386,12 +392,14 @@ class AlumnosSearchDialogFragment : DialogFragment() {
     }
 
     private suspend fun getAlumnoCursosId(curso: Curso, alumno: Alumno): Int? {
+        val token = TokenManager.obtenerToken(requireContext())
         val url = "http://192.168.0.10:8080/escuelaAlumnosCursos/api/alumnosCursos/${curso.id}/alumnos/${alumno.id}"
 
         return withContext(Dispatchers.IO) {
             try {
                 val conexion = URL(url).openConnection() as HttpURLConnection
                 conexion.requestMethod = "GET"
+                conexion.setRequestProperty("Authorization", "Bearer $token")
                 conexion.connect()
 
                 if (conexion.responseCode == HttpURLConnection.HTTP_OK) {
@@ -410,8 +418,12 @@ class AlumnosSearchDialogFragment : DialogFragment() {
     }
 
     private suspend fun getAlumnosList(): List<Alumno>? {
+        val token = TokenManager.obtenerToken(requireContext().applicationContext)
         val url = "http://192.168.0.10:8080/escuelaAlumnos/api/alumnos"
-        val request = Request.Builder().url(url).get().build()
+        val request = Request.Builder().url(url).header("Authorization", "Bearer $token").get().build()
+
+        Log.e("URL API ALUMNOS", request.headers.toString())
+        Log.e("URL API", request.toString())
 
         return withContext(Dispatchers.IO) {
             try {

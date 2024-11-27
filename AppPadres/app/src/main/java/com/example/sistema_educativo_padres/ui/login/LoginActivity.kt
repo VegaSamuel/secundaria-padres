@@ -2,6 +2,7 @@
 
 package com.example.sistema_educativo_padres.ui.login
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -12,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.sistema_educativo_padres.MainActivity
 import com.example.sistema_educativo_padres.R
 import com.example.sistema_educativo_padres.data.Padre
+import com.example.sistema_educativo_padres.sec.TokenManager
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -173,12 +175,10 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun savePadreToDatabase(padre: Padre) {
-        val url = "http://192.168.0.10:8080/escuelaPadres/api/padres"
+        val url = "http://192.168.0.10:8080/escuelaPadres/api/padres/add"
         val jsonBody = JSONObject()
         jsonBody.put("nombre", padre.nombre)
         jsonBody.put("email", padre.email)
-
-        Log.e("url", jsonBody.toString())
 
         val requestBody = jsonBody.toString().toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
         val request = Request.Builder().url(url).post(requestBody).build()
@@ -186,6 +186,11 @@ class LoginActivity : AppCompatActivity() {
         client.newCall(request).enqueue(object : Callback {
             override fun onResponse(call: Call, response: Response) {
                 if (response.isSuccessful) {
+                    val token = response.header("Authorization")?.substringAfter("Bearer ")
+                    if(token != null) {
+                        TokenManager.guardarToken(applicationContext, token)
+                    }
+
                     Log.d("Registro", "Padre registrado en la base de datos")
                 }else {
                     Log.e("Registro", "Error al registrar en la base de datos")
@@ -199,6 +204,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun verifyCurrentUser(user: FirebaseUser) {
+        savePadreToDatabase(Padre(0, user.displayName.toString(), user.email.toString()))
         val main = Intent(this, MainActivity::class.java).apply {
             putExtra("userName", user.displayName)
             putExtra("userEmail", user.email)
