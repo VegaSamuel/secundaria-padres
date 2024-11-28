@@ -9,6 +9,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.example.sistema_educativo_padres.R
 import com.example.sistema_educativo_padres.ui.tareas.PendientesFragment
+import com.example.sistema_educativo_padres.ui.tareas.TodosFragment
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import java.lang.IllegalStateException
@@ -54,7 +55,11 @@ class TareasPagerAdapter(fragment: Fragment, private val alumnoId: String) : Fra
                     putString("alumnoId", alumnoId)
                 }
             }
-            1 -> Fragment()
+            1 -> TodosFragment().apply {
+                arguments = Bundle().apply {
+                    putString("alumnoId", alumnoId)
+                }
+            }
             else -> throw IllegalStateException("Posición invalida")
         }
     }

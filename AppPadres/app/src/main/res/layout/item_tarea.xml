@@ -1,35 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="8dp">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="4dp"
+    app:cardElevation="2dp">
     
-    <TextView
-        android:id="@+id/tareaTitulo"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:textColor="@color/black"
-        android:text="@string/tarea_title"/>
+        android:orientation="vertical"
+        android:padding="8dp" >
 
-    <TextView
-        android:id="@+id/tareaFecha"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/black"
-        android:textSize="10sp"
-        android:text="@string/tarea_date"
-        tools:ignore="SmallSp" />
+        <TextView
+            android:id="@+id/tareaTitulo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:text="@string/tarea_title"/>
 
-    <TextView
-        android:id="@+id/tareaCurso"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/black"
-        android:textSize="12sp"
-        android:text="@string/tarea_course" />
+        <TextView
+            android:id="@+id/tareaFecha"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="10sp"
+            android:text="@string/tarea_date"
+            tools:ignore="SmallSp" />
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/tareaCurso"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            android:text="@string/tarea_course" />
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
