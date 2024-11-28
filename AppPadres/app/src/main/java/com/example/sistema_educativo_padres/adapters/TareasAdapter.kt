@@ -1,5 +1,6 @@
 package com.example.sistema_educativo_padres.adapters
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,4 +32,11 @@ class TareasAdapter(private val tareas: List<Tarea>) : RecyclerView.Adapter<Tare
     }
 
     override fun getItemCount(): Int = tareas.size
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun actualizarDatos(tareas: List<Tarea>) {
+        (tareas as MutableList).clear()
+        tareas.addAll(tareas)
+        notifyDataSetChanged()
+    }
 }

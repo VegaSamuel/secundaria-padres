@@ -49,9 +49,19 @@ class PendientesFragment : Fragment() {
     private fun cargarPendientes(alumnoId: String) {
         lifecycleScope.launch {
             val tareasPendientes = getTareasPendientes(alumnoId)
-            delay(60000)
+            Log.w("Pendientes", tareasPendientes.toString())
 
             adapter = TareasAdapter(tareasPendientes)
+            recyclerPendientes.adapter = adapter
+        }
+    }
+
+    private fun actualizarPendientes(tareas: List<Tarea>) {
+        if(::adapter.isInitialized) {
+            Log.w("Pendientes actualizados", tareas.toString())
+            adapter.actualizarDatos(tareas)
+        }else {
+            adapter = TareasAdapter(tareas.toMutableList())
             recyclerPendientes.adapter = adapter
         }
     }
@@ -98,7 +108,6 @@ class PendientesFragment : Fragment() {
                             val responseBody = response.body?.string()
                             if(!responseBody.isNullOrEmpty()) {
                                 val jsonArray = JSONArray(responseBody)
-                                val tareas = mutableListOf<Tarea>()
                                 for (j in 0 until jsonArray.length()) {
                                     val jsonTarea = jsonArray.getJSONObject(j)
                                     if (jsonTarea.getInt("avaladoPadre") == 0) {
@@ -110,8 +119,7 @@ class PendientesFragment : Fragment() {
                                             avalada = jsonTarea.getInt("avaladoPadre"),
                                             curso = cursoId
                                         )
-                                        tareas.add(tarea)
-                                        Log.w("Tarea agregada", tarea.toString())
+                                        tareasPendientes.add(tarea)
                                     }
                                 }
                             }else {
@@ -125,6 +133,7 @@ class PendientesFragment : Fragment() {
             }
         }
 
+        actualizarPendientes(tareasPendientes)
         return tareasPendientes
     }
 }
