@@ -129,4 +129,23 @@ public class TareasResources {
             }
         }
     }
+    
+    @GET
+    @Path("/curso/{idCurso}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getTarasByCurso(@PathParam("idCurso") int idCurso) {
+        ITareaDAO tareas = null;
+        
+        try {
+            tareas = new TareaDAO();
+            List<Tarea> lTareas = tareas.obtenerTareasPorCurso(idCurso);
+            return Response.ok(lTareas).build();
+        }catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error al obtener la lista de tareas").build();
+        }finally {
+            if(tareas != null) {
+                Conexion.cerrarConexion();
+            }
+        }
+    }
 }

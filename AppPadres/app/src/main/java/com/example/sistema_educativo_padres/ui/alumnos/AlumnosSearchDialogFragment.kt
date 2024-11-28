@@ -346,14 +346,14 @@ class AlumnosSearchDialogFragment : DialogFragment() {
 
         val token = TokenManager.obtenerToken(requireContext())
         val requestBody = jsonBody.toString().toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
-        val request = Request.Builder().url(url).header("Header", "Bearer $token").post(requestBody).build()
+        val request = Request.Builder().url(url).header("Authorization", "Bearer $token").post(requestBody).build()
 
         client.newCall(request).enqueue(object : Callback {
             override fun onResponse(call: Call, response: Response) {
                 if(response.isSuccessful) {
                     Log.d("Registro tarea", "Tareas registradas en la base de datos")
                 }else {
-                    Log.e("Registro tarea", "Errro al registrar las tareas del alumno en la base de datos")
+                    Log.e("Registro tarea", "Error al registrar las tareas del alumno en la base de datos")
                 }
             }
 
@@ -361,8 +361,6 @@ class AlumnosSearchDialogFragment : DialogFragment() {
                 Log.e("Registro tarea", "Fallo en la conexión al servicio REST")
             }
         })
-
-        delay(1000)
     }
 
     private suspend fun getPadreId(correo: String): Int? {

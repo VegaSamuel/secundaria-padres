@@ -38,4 +38,14 @@
             android:name="alumnoId"
             app:argType="string"/>
     </fragment>
+
+    <fragment
+        android:id="@+id/nav_pendientes_fragment"
+        android:name="com.example.sistema_educativo_padres.ui.tareas.PendientesFragment"
+        tools:layout="@layout/fragment_pendientes">
+
+        <argument
+            android:name="alumnoId"
+            app:argType="string"/>
+    </fragment>
 </navigation>

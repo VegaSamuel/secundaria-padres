@@ -153,4 +153,29 @@ public class TareaDAO implements ITareaDAO {
         return tareas;
     }
     
+    @Override
+    public List<Tarea> obtenerTareasPorCurso(int idCurso) {
+        List<Tarea> tareas = new ArrayList<>();
+        String sql = "SELECT id, nombre, fecha_entrega, calificacion, avalado_padre, curso_id FROM tareas WHERE curso_id = ?";
+        
+        try (PreparedStatement stmt = conexion.prepareStatement(sql)){
+            stmt.setInt(1, idCurso);
+            ResultSet rs = stmt.executeQuery();
+            
+            while(rs.next()) {
+                Tarea tarea = new Tarea();
+                tarea.setId(rs.getInt("id"));
+                tarea.setNombre(rs.getString("nombre"));
+                tarea.setFechaEntrega(rs.getDate("fecha_entrega"));
+                tarea.setCalificacion(rs.getFloat("calificacion"));
+                tarea.setAvaladoPadre(rs.getInt("avalado_padre"));
+                tarea.setIdCurso(rs.getInt("curso_id"));
+                tareas.add(tarea);
+            }  
+        }catch(SQLException sqle) {
+            System.out.println(sqle.getMessage());
+        }
+        
+        return tareas;
+    }
 }

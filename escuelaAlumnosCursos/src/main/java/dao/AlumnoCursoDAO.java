@@ -122,7 +122,7 @@ public class AlumnoCursoDAO implements IAlumnoCursoDAO {
     @Override
     public AlumnoCurso eliminarAlumnoCurso(int id) {
         AlumnoCurso alumnoCurso = new AlumnoCurso();
-        String sql = "DELETE FROM alumno_cursos WHERE id = ?";
+        String sql = "DELETE FROM alumnos_cursos WHERE id = ?";
         
         try(
             PreparedStatement stmt = conexion.prepareStatement(sql)
@@ -146,7 +146,7 @@ public class AlumnoCursoDAO implements IAlumnoCursoDAO {
     @Override
     public List<AlumnoCurso> obtenerAlumnosCursos() {
         List<AlumnoCurso> alumnosCursos = new ArrayList<>();
-        String sql = "SELECT id, alumno_id, curso_id, calificacion_final FROM alumno_cursos";
+        String sql = "SELECT id, alumno_id, curso_id, calificacion_final FROM alumnos_cursos";
         
         try(
             PreparedStatement stmt = conexion.prepareStatement(sql);
@@ -167,4 +167,27 @@ public class AlumnoCursoDAO implements IAlumnoCursoDAO {
         return alumnosCursos;
     }
     
+    @Override
+    public List<AlumnoCurso> obtenerAlumnosCursosPorAlumno(int idAlumno) {
+        List<AlumnoCurso> alumnosCursos = new ArrayList<>();
+        String sql = "SELECT id, alumno_id, curso_id, calificacion_final FROM alumnos_cursos WHERE alumno_id = ?";
+        
+        try(PreparedStatement stmt = conexion.prepareStatement(sql)) {
+            stmt.setInt(1, idAlumno);
+            ResultSet rs = stmt.executeQuery();
+            
+            while(rs.next()) {
+                AlumnoCurso alumnoCurso = new AlumnoCurso();
+                alumnoCurso.setId(rs.getInt("id"));
+                alumnoCurso.setIdAlumno(rs.getInt("alumno_id"));
+                alumnoCurso.setIdCurso(rs.getInt("curso_id"));
+                alumnoCurso.setCalificacion(rs.getFloat("calificacion_final"));
+                alumnosCursos.add(alumnoCurso);
+            }
+        }catch(SQLException sqle) {
+            System.out.println(sqle.getMessage());
+        }
+        
+        return alumnosCursos;
+    }
 }

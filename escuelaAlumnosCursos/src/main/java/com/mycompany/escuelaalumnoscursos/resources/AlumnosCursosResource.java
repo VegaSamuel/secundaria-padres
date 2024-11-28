@@ -153,4 +153,23 @@ public class AlumnosCursosResource {
             }
         }
     }
+    
+    @GET
+    @Path("/alumnos/{idAlumno}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAlumnosCursosPorAlumno(@PathParam("idAlumno") int idAlumno) {
+        IAlumnoCursoDAO alumnosCursos = null;
+        
+        try {
+            alumnosCursos = new AlumnoCursoDAO();
+            List<AlumnoCurso> lAlumnosCursos = alumnosCursos.obtenerAlumnosCursosPorAlumno(idAlumno);
+            return Response.ok(lAlumnosCursos).build();
+        }catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error al obtener la lista de alumnos y cursos").build();
+        }finally {
+            if(alumnosCursos != null) {
+                Conexion.cerrarConexion();
+            }
+        }
+    }
 }

@@ -16,4 +16,6 @@ public interface IAlumnoCursoDAO {
     public AlumnoCurso eliminarAlumnoCurso(int id);
     
     public List<AlumnoCurso> obtenerAlumnosCursos();
+    
+    public List<AlumnoCurso> obtenerAlumnosCursosPorAlumno(int idAlumno);
 }

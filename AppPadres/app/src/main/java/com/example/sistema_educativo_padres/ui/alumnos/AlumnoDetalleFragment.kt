@@ -30,7 +30,8 @@ class AlumnoDetalleFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val adapter = TareasPagerAdapter(this)
+        val alumnoId = arguments?.getString("alumnoId") ?: ""
+        val adapter = TareasPagerAdapter(this, alumnoId)
         viewPager.adapter = adapter
 
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
@@ -43,12 +44,16 @@ class AlumnoDetalleFragment : Fragment() {
     }
 }
 
-class TareasPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
+class TareasPagerAdapter(fragment: Fragment, private val alumnoId: String) : FragmentStateAdapter(fragment) {
     override fun getItemCount(): Int = 2
 
     override fun createFragment(position: Int): Fragment {
         return when(position) {
-            0 -> PendientesFragment()
+            0 -> PendientesFragment().apply {
+                arguments = Bundle().apply {
+                    putString("alumnoId", alumnoId)
+                }
+            }
             1 -> Fragment()
             else -> throw IllegalStateException("Posición invalida")
         }

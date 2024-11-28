@@ -18,4 +18,6 @@ public interface ITareaDAO {
     public Tarea eliminarTarea(int id);
     
     public List<Tarea> obtenerTareas();
+    
+    public List<Tarea> obtenerTareasPorCurso(int idCurso);
 }
