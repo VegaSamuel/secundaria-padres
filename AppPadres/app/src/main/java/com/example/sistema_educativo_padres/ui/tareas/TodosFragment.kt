@@ -11,24 +11,28 @@ import com.example.sistema_educativo_padres.R
 import com.example.sistema_educativo_padres.adapters.CursosAdapter
 import com.example.sistema_educativo_padres.data.CursoConTarea
 import com.example.sistema_educativo_padres.data.Tarea
+import okhttp3.OkHttpClient
 
 class TodosFragment : Fragment() {
-    private lateinit var recyclerView: RecyclerView
+    private val client = OkHttpClient
+
+    private lateinit var recyclerTodos: RecyclerView
     private lateinit var adapter: CursosAdapter
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_todos, container, false)
-        recyclerView = view.findViewById(R.id.tareasRecyclerView)
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+        recyclerTodos = view.findViewById(R.id.recyclerTodos)
+        recyclerTodos.layoutManager = LinearLayoutManager(requireContext())
 
         val cursos = listOf(
-            CursoConTarea(1, "Matemáticas", listOf(Tarea(1, "Tarea1", 0, 0.0.toFloat(), 0, 1)), false)
+            CursoConTarea(1, "Matemáticas", listOf(Tarea(1, "Tarea1", 0, 0.0f, 0, 1)), true)
         )
 
         adapter = CursosAdapter(cursos)
-        recyclerView.adapter = adapter
+        recyclerTodos.adapter = adapter
 
         return view
     }

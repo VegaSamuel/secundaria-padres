@@ -9,4 +9,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="red">#FF0000</color>
     <color name="alumno_item">#86B5F8</color>
+    <color name="curso_item">#A5A1A1</color>
 </resources>
