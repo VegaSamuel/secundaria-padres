@@ -73,7 +73,7 @@ class PendientesFragment : Fragment() {
         val cursos = mutableListOf<Int>()
         val tareasPendientes = mutableListOf<Tarea>()
 
-        var curso = 0
+        var cursosNombres = mutableListOf<Int>()
         var nombre = ""
 
         withContext(Dispatchers.IO) {
@@ -88,7 +88,8 @@ class PendientesFragment : Fragment() {
                             for (i in 0 until jsonArray.length()) {
                                 val jsonCurso = jsonArray.getJSONObject(i)
                                 val cursoId = jsonCurso.getInt("id")
-                                curso = jsonCurso.getInt("idCurso")
+                                val cursoNombre = jsonCurso.getInt("idCurso")
+                                cursosNombres.add(cursoNombre)
                                 cursos.add(cursoId)
                             }
                         }
@@ -99,28 +100,29 @@ class PendientesFragment : Fragment() {
             }
         }
 
-        val urlCurso = "http://192.168.0.10:8080/escuelaCursos/api/cursos/$curso"
-        withContext(Dispatchers.IO) {
-            try {
-                val request = Request.Builder().url(urlCurso).header("Authorization", "Bearer $token").get().build()
-                val response = client.newCall(request).execute()
-                response.use {
-                    if (response.isSuccessful) {
-                        val responseBody = response.body?.string()
-                        if(!responseBody.isNullOrEmpty()) {
-                            val jsonCurso = JSONObject(responseBody)
-                            val nombreCurso = jsonCurso.getString("nombre")
-                            nombre = nombreCurso
+        for (i in 0 until cursos.size) {
+            val urlCurso = "http://192.168.0.10:8080/escuelaCursos/api/cursos/${cursosNombres[i]}"
+            var curso = ""
+            withContext(Dispatchers.IO) {
+                try {
+                    val request = Request.Builder().url(urlCurso).header("Authorization", "Bearer $token").get().build()
+                    val response = client.newCall(request).execute()
+                    response.use {
+                        if (response.isSuccessful) {
+                            val responseBody = response.body?.string()
+                            if(!responseBody.isNullOrEmpty()) {
+                                val jsonCurso = JSONObject(responseBody)
+                                val nombreCurso = jsonCurso.getString("nombre")
+                                nombre = nombreCurso
+                            }
                         }
                     }
+                }catch (e: Exception) {
+                    Log.e("Error cursos", "Exception: ${e.message}")
                 }
-            }catch (e: Exception) {
-                Log.e("Error cursos", "Exception: ${e.message}")
             }
-        }
 
-        for (cursoId in cursos) {
-            val urlTareas = "http://192.168.0.10:8080/escuelaTareas/api/tareas/curso/$cursoId"
+            val urlTareas = "http://192.168.0.10:8080/escuelaTareas/api/tareas/curso/${cursos[i]}"
 
             withContext(Dispatchers.IO) {
                 try {
@@ -140,7 +142,7 @@ class PendientesFragment : Fragment() {
                                             calificacion = jsonTarea.getDouble("calificacion").toFloat(),
                                             fechaEntrega = jsonTarea.optLong("duedate", 0L),
                                             avalada = jsonTarea.getInt("avaladoPadre"),
-                                            curso = cursoId
+                                            curso = cursos[i]
                                         )
                                         tarea.nombreCurso = nombre
                                         tareasPendientes.add(tarea)

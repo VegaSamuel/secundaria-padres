@@ -62,8 +62,7 @@ class TodosFragment : Fragment() {
     private suspend fun getCursosConTareas(alumnoId: String) {
         val token = TokenManager.obtenerToken(requireContext())
 
-        val urlCursos =
-            "http://192.168.0.10:8080/escuelaAlumnosCursos/api/alumnosCursos/alumnos/$alumnoId"
+        val urlCursos = "http://192.168.0.10:8080/escuelaAlumnosCursos/api/alumnosCursos/alumnos/$alumnoId"
         val cursos = mutableListOf<Int>()
         val cursosAlumno = mutableListOf<Int>()
 
@@ -100,7 +99,6 @@ class TodosFragment : Fragment() {
         for (i in 0 until cursos.size) {
             val tareas = mutableListOf<Tarea>()
             val urlCurso = "http://192.168.0.10:8080/escuelaCursos/api/cursos/${cursos[i]}"
-            Log.w("urlCurso", urlCurso)
 
             withContext(Dispatchers.IO) {
                 try {
@@ -123,9 +121,7 @@ class TodosFragment : Fragment() {
                 }
             }
 
-            val urlTareas =
-                "http://192.168.0.10:8080/escuelaTareas/api/tareas/curso/${cursosAlumno[i]}"
-            Log.w("urlTareas", urlTareas)
+            val urlTareas = "http://192.168.0.10:8080/escuelaTareas/api/tareas/curso/${cursosAlumno[i]}"
 
             withContext(Dispatchers.IO) {
                 try {
@@ -136,7 +132,6 @@ class TodosFragment : Fragment() {
                     response.use {
                         if (response.isSuccessful) {
                             val responseBody = response.body?.string()
-                            Log.w("Response Tareas", responseBody.toString())
                             if (!responseBody.isNullOrEmpty()) {
                                 val jsonArray = JSONArray(responseBody)
                                 for (j in 0 until jsonArray.length()) {
@@ -163,7 +158,6 @@ class TodosFragment : Fragment() {
             }
 
             cursosTareas.add(CursoConTarea(i, nombre, tareas, false))
-            Log.w("Cursos obtenidos", cursosTareas.toString())
         }
 
         actualizarCursos(cursosTareas)
