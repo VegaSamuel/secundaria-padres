@@ -1,5 +1,6 @@
 package com.example.sistema_educativo_padres.adapters
 
+import android.annotation.SuppressLint
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -44,4 +45,11 @@ class CursosAdapter(private val cursos: List<CursoConTarea>) : RecyclerView.Adap
     }
 
     override fun getItemCount(): Int = cursos.size
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun actualizarDatos(cursos: List<CursoConTarea>) {
+        (cursos as MutableList).clear()
+        cursos.addAll(cursos)
+        notifyDataSetChanged()
+    }
 }

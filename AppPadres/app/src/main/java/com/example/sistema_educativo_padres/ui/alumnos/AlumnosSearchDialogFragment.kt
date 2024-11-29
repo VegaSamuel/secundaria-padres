@@ -166,8 +166,6 @@ class AlumnosSearchDialogFragment : DialogFragment() {
                         val inputStream = BufferedReader(InputStreamReader(urlConnection.inputStream))
                         val responseText = inputStream.use { it.readText() }
 
-                        Log.d("Cursos", responseText)
-
                         val cursosJSONArray = JSONArray(responseText)
                         val cursosList = mutableListOf<Curso>()
 

@@ -38,7 +38,6 @@ class PendientesFragment : Fragment() {
         recyclerPendientes.layoutManager = LinearLayoutManager(requireContext())
 
         val alumnoId = arguments?.getString("alumnoId")
-        Log.e("AlumnoId", alumnoId.toString())
         if (alumnoId != null) {
             cargarPendientes(alumnoId)
         }
@@ -86,7 +85,6 @@ class PendientesFragment : Fragment() {
                                 val jsonCurso = jsonArray.getJSONObject(i)
                                 val cursoId = jsonCurso.getInt("id")
                                 cursos.add(cursoId)
-                                Log.w("Curso añadido", cursoId.toString())
                             }
                         }
                     }
