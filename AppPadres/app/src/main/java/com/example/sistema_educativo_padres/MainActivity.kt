@@ -6,6 +6,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import com.google.android.material.snackbar.Snackbar
@@ -72,6 +73,13 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_tareas, R.id.nav_gallery
             ), drawerLayout
         )
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            binding.appBarMain.fab.visibility = if(destination.id == R.id.nav_tareas) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
+        }
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
