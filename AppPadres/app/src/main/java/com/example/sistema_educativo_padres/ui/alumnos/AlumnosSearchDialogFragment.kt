@@ -52,7 +52,7 @@ class AlumnosSearchDialogFragment : DialogFragment() {
             addAlumnoToDatabase(alumno)
             getCursosFromMoodle(alumno)
             tareas.recargarAlumnos(padre.getCurrentUserEmail(), requireContext())
-            delay(3000)
+            delay(2500)
             dismiss()
         }
     }
@@ -139,7 +139,7 @@ class AlumnosSearchDialogFragment : DialogFragment() {
                 if (!nombre.equals("Administrador")) {
                     val alumno = Alumno(id, nombre, apellido, email, padreId)
 
-                    if(listAlumnosDB.none {it.nombre == alumno.nombre && it.apellido == alumno.apellido && it.padre == alumno.padre}) {
+                    if(listAlumnosDB.none {it.nombre == alumno.nombre && it.apellido == alumno.apellido}) {
                         alumnos.add(alumno)
                     }
                 }
@@ -418,7 +418,6 @@ class AlumnosSearchDialogFragment : DialogFragment() {
         val url = "http://192.168.0.10:8080/escuelaAlumnos/api/alumnos"
         val request = Request.Builder().url(url).header("Authorization", "Bearer $token").get().build()
 
-        Log.e("URL API ALUMNOS", request.headers.toString())
         Log.e("URL API", request.toString())
 
         return withContext(Dispatchers.IO) {
