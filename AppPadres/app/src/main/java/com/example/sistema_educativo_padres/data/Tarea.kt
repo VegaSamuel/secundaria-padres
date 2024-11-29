@@ -7,4 +7,8 @@ data class Tarea(
     val calificacion: Float,
     val avalada: Int,
     val curso: Int
-)
+) {
+    var nombreCurso: String = ""
+}
+
+

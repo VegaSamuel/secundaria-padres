@@ -20,6 +20,7 @@ import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONArray
+import org.json.JSONObject
 
 class PendientesFragment : Fragment() {
 
@@ -72,6 +73,9 @@ class PendientesFragment : Fragment() {
         val cursos = mutableListOf<Int>()
         val tareasPendientes = mutableListOf<Tarea>()
 
+        var curso = 0
+        var nombre = ""
+
         withContext(Dispatchers.IO) {
             try {
                 val request = Request.Builder().url(urlCursos).header("Authorization", "Bearer $token").get().build()
@@ -84,8 +88,29 @@ class PendientesFragment : Fragment() {
                             for (i in 0 until jsonArray.length()) {
                                 val jsonCurso = jsonArray.getJSONObject(i)
                                 val cursoId = jsonCurso.getInt("id")
+                                curso = jsonCurso.getInt("idCurso")
                                 cursos.add(cursoId)
                             }
+                        }
+                    }
+                }
+            }catch (e: Exception) {
+                Log.e("Error cursos", "Exception: ${e.message}")
+            }
+        }
+
+        val urlCurso = "http://192.168.0.10:8080/escuelaCursos/api/cursos/$curso"
+        withContext(Dispatchers.IO) {
+            try {
+                val request = Request.Builder().url(urlCurso).header("Authorization", "Bearer $token").get().build()
+                val response = client.newCall(request).execute()
+                response.use {
+                    if (response.isSuccessful) {
+                        val responseBody = response.body?.string()
+                        if(!responseBody.isNullOrEmpty()) {
+                            val jsonCurso = JSONObject(responseBody)
+                            val nombreCurso = jsonCurso.getString("nombre")
+                            nombre = nombreCurso
                         }
                     }
                 }
@@ -117,6 +142,7 @@ class PendientesFragment : Fragment() {
                                             avalada = jsonTarea.getInt("avaladoPadre"),
                                             curso = cursoId
                                         )
+                                        tarea.nombreCurso = nombre
                                         tareasPendientes.add(tarea)
                                     }
                                 }

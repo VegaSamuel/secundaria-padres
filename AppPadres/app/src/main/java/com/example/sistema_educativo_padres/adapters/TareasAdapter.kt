@@ -28,7 +28,7 @@ class TareasAdapter(private val tareas: List<Tarea>) : RecyclerView.Adapter<Tare
 
         holder.titulo.text = tarea.titulo
         holder.fecha.text = tarea.fechaEntrega.toString()
-        holder.curso.text = tarea.curso.toString()
+        holder.curso.text = tarea.nombreCurso
     }
 
     override fun getItemCount(): Int = tareas.size
