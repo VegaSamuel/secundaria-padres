@@ -41,7 +41,6 @@ class PendientesFragment : Fragment() {
         recyclerPendientes.layoutManager = LinearLayoutManager(requireContext())
 
         val alumnoId = arguments?.getString("alumnoId")
-        Log.d("AlumnoId", alumnoId.toString())
         if (alumnoId != null) {
             cargarPendientes(alumnoId)
         }
@@ -63,6 +62,8 @@ class PendientesFragment : Fragment() {
                     putString("curso", tarea.nombreCurso)
                     putString("fechaEntrega", tarea.fechaEntrega.toString())
                     putFloat("calificacion", tarea.calificacion)
+                    putString("tareaId", tarea.id.toString())
+                    putString("cursoId", tarea.curso.toString())
                 }
                 findNavController().navigate(
                     R.id.action_nav_alumno_detalle_to_nav_tareas_detalles_fragment,
@@ -82,6 +83,7 @@ class PendientesFragment : Fragment() {
                 putString("curso", tarea.nombreCurso)
                 putString("fechaEntrega", tarea.fechaEntrega.toString())
                 putFloat("calificacion", tarea.calificacion)
+                putString("tareaId", tarea.id.toString())
             }
             findNavController().navigate(
                 R.id.action_nav_pendientes_to_nav_tareas_detalles_fragment,
@@ -129,7 +131,6 @@ class PendientesFragment : Fragment() {
 
         for (i in 0 until cursos.size) {
             val urlCurso = "http://192.168.0.10:8080/escuelaCursos/api/cursos/${cursosNombres[i]}"
-            var curso = ""
             withContext(Dispatchers.IO) {
                 try {
                     val request =

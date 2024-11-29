@@ -77,5 +77,13 @@
         <argument
             android:name="calificacion"
             app:argType="float" />
+
+        <argument
+            android:name="tareaId"
+            app:argType="string" />
+
+        <argument
+            android:name="cursoId"
+            app:argType="string" />
     </fragment>
 </navigation>

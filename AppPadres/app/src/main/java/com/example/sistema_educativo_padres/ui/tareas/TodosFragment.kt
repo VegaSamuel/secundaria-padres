@@ -51,12 +51,8 @@ class TodosFragment : Fragment() {
     }
 
     private fun actualizarCursos(cursos: List<CursoConTarea>) {
-        if (::adapter.isInitialized) {
-            adapter.actualizarDatos(cursos)
-        } else {
-            adapter = CursosAdapter(cursos.toMutableList())
-            recyclerTodos.adapter = adapter
-        }
+        adapter = CursosAdapter(cursos.toMutableList())
+        recyclerTodos.adapter = adapter
     }
 
     private suspend fun getCursosConTareas(alumnoId: String) {
