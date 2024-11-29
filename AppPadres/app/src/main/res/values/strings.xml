@@ -28,5 +28,13 @@
     <string name="tarea_date">Fecha de entrega</string>
     <string name="tarea_course">Curso correspondiente</string>
 
+    <string name="curso_title_detalle">Nombre del curso</string>
+    <string name="curso_tarea_title_detalle">Titulo de la tarea</string>
+    <string name="curso_tarea_date_detalle">Fecha de entrega de la tarea</string>
+    <string name="curso_tarea_calificacion">Calificación</string>
+    <string name="curso_avalar_btn">Avalar tarea</string>
+
+    <string name="calificacion_format">Calificación: %.2f</string>
+
     <string name="api_key">978695257819-q5vj2ckko3mois6gfbjlaaqdrvtg5ghh.apps.googleusercontent.com</string>
 </resources>

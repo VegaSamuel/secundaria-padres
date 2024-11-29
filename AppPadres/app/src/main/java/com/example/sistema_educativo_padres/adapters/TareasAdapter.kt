@@ -10,11 +10,18 @@ import com.example.sistema_educativo_padres.R
 import com.example.sistema_educativo_padres.data.Tarea
 
 class TareasAdapter(private val tareas: List<Tarea>) : RecyclerView.Adapter<TareasAdapter.TareaViewHolder>() {
+    private var onItemClickListener: ((Tarea) -> Unit)? = null
 
     inner class TareaViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         val titulo: TextView = itemView.findViewById(R.id.tareaTitulo)
         val fecha: TextView = itemView.findViewById(R.id.tareaFecha)
         val curso: TextView = itemView.findViewById(R.id.tareaCurso)
+
+        fun bind(tarea: Tarea) {
+            titulo.text = tarea.titulo
+            fecha.text = tarea.fechaEntrega.toString()
+            curso.text = tarea.nombreCurso
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TareaViewHolder {
@@ -25,13 +32,17 @@ class TareasAdapter(private val tareas: List<Tarea>) : RecyclerView.Adapter<Tare
 
     override fun onBindViewHolder(holder: TareaViewHolder, position: Int) {
         val tarea = tareas[position]
-
-        holder.titulo.text = tarea.titulo
-        holder.fecha.text = tarea.fechaEntrega.toString()
-        holder.curso.text = tarea.nombreCurso
+        holder.bind(tarea)
+        holder.itemView.setOnClickListener {
+            onItemClickListener?.invoke(tarea)
+        }
     }
 
     override fun getItemCount(): Int = tareas.size
+
+    fun setOnItemClickListener(listener: (Tarea) -> Unit) {
+        onItemClickListener = listener
+    }
 
     @SuppressLint("NotifyDataSetChanged")
     fun actualizarDatos(tareas: List<Tarea>) {

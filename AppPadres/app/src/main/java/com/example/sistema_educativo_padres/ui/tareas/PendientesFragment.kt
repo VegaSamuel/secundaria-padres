@@ -6,7 +6,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sistema_educativo_padres.R
@@ -14,7 +17,6 @@ import com.example.sistema_educativo_padres.adapters.TareasAdapter
 import com.example.sistema_educativo_padres.data.Tarea
 import com.example.sistema_educativo_padres.sec.TokenManager
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
@@ -39,6 +41,7 @@ class PendientesFragment : Fragment() {
         recyclerPendientes.layoutManager = LinearLayoutManager(requireContext())
 
         val alumnoId = arguments?.getString("alumnoId")
+        Log.d("AlumnoId", alumnoId.toString())
         if (alumnoId != null) {
             cargarPendientes(alumnoId)
         }
@@ -53,22 +56,44 @@ class PendientesFragment : Fragment() {
 
             adapter = TareasAdapter(tareasPendientes)
             recyclerPendientes.adapter = adapter
+
+            adapter.setOnItemClickListener { tarea ->
+                val bundle = Bundle().apply {
+                    putString("titulo", tarea.titulo)
+                    putString("curso", tarea.nombreCurso)
+                    putString("fechaEntrega", tarea.fechaEntrega.toString())
+                    putFloat("calificacion", tarea.calificacion)
+                }
+                findNavController().navigate(
+                    R.id.action_nav_alumno_detalle_to_nav_tareas_detalles_fragment,
+                    bundle
+                )
+            }
         }
     }
 
     private fun actualizarPendientes(tareas: List<Tarea>) {
-        if(::adapter.isInitialized) {
-            Log.w("Pendientes actualizados", tareas.toString())
-            adapter.actualizarDatos(tareas)
-        }else {
-            adapter = TareasAdapter(tareas.toMutableList())
-            recyclerPendientes.adapter = adapter
+        adapter = TareasAdapter(tareas.toMutableList())
+        recyclerPendientes.adapter = adapter
+
+        adapter.setOnItemClickListener { tarea ->
+            val bundle = Bundle().apply {
+                putString("titulo", tarea.titulo)
+                putString("curso", tarea.nombreCurso)
+                putString("fechaEntrega", tarea.fechaEntrega.toString())
+                putFloat("calificacion", tarea.calificacion)
+            }
+            findNavController().navigate(
+                R.id.action_nav_pendientes_to_nav_tareas_detalles_fragment,
+                bundle
+            )
         }
     }
 
     private suspend fun getTareasPendientes(alumnoId: String): List<Tarea> {
         val token = TokenManager.obtenerToken(requireContext())
-        val urlCursos = "http://192.168.0.10:8080/escuelaAlumnosCursos/api/alumnosCursos/alumnos/$alumnoId"
+        val urlCursos =
+            "http://192.168.0.10:8080/escuelaAlumnosCursos/api/alumnosCursos/alumnos/$alumnoId"
 
         val cursos = mutableListOf<Int>()
         val tareasPendientes = mutableListOf<Tarea>()
@@ -78,12 +103,14 @@ class PendientesFragment : Fragment() {
 
         withContext(Dispatchers.IO) {
             try {
-                val request = Request.Builder().url(urlCursos).header("Authorization", "Bearer $token").get().build()
+                val request =
+                    Request.Builder().url(urlCursos).header("Authorization", "Bearer $token").get()
+                        .build()
                 val response = client.newCall(request).execute()
                 response.use {
                     if (response.isSuccessful) {
                         val responseBody = response.body?.string()
-                        if(!responseBody.isNullOrEmpty()) {
+                        if (!responseBody.isNullOrEmpty()) {
                             val jsonArray = JSONArray(responseBody)
                             for (i in 0 until jsonArray.length()) {
                                 val jsonCurso = jsonArray.getJSONObject(i)
@@ -95,7 +122,7 @@ class PendientesFragment : Fragment() {
                         }
                     }
                 }
-            }catch (e: Exception) {
+            } catch (e: Exception) {
                 Log.e("Error cursos", "Exception: ${e.message}")
             }
         }
@@ -105,19 +132,21 @@ class PendientesFragment : Fragment() {
             var curso = ""
             withContext(Dispatchers.IO) {
                 try {
-                    val request = Request.Builder().url(urlCurso).header("Authorization", "Bearer $token").get().build()
+                    val request =
+                        Request.Builder().url(urlCurso).header("Authorization", "Bearer $token")
+                            .get().build()
                     val response = client.newCall(request).execute()
                     response.use {
                         if (response.isSuccessful) {
                             val responseBody = response.body?.string()
-                            if(!responseBody.isNullOrEmpty()) {
+                            if (!responseBody.isNullOrEmpty()) {
                                 val jsonCurso = JSONObject(responseBody)
                                 val nombreCurso = jsonCurso.getString("nombre")
                                 nombre = nombreCurso
                             }
                         }
                     }
-                }catch (e: Exception) {
+                } catch (e: Exception) {
                     Log.e("Error cursos", "Exception: ${e.message}")
                 }
             }
@@ -126,12 +155,14 @@ class PendientesFragment : Fragment() {
 
             withContext(Dispatchers.IO) {
                 try {
-                    val request = Request.Builder().url(urlTareas).header("Authorization", "Bearer $token").get().build()
+                    val request =
+                        Request.Builder().url(urlTareas).header("Authorization", "Bearer $token")
+                            .get().build()
                     val response = client.newCall(request).execute()
                     response.use {
                         if (response.isSuccessful) {
                             val responseBody = response.body?.string()
-                            if(!responseBody.isNullOrEmpty()) {
+                            if (!responseBody.isNullOrEmpty()) {
                                 val jsonArray = JSONArray(responseBody)
                                 for (j in 0 until jsonArray.length()) {
                                     val jsonTarea = jsonArray.getJSONObject(j)
@@ -139,7 +170,8 @@ class PendientesFragment : Fragment() {
                                         val tarea = Tarea(
                                             id = jsonTarea.getInt("id"),
                                             titulo = jsonTarea.getString("nombre"),
-                                            calificacion = jsonTarea.getDouble("calificacion").toFloat(),
+                                            calificacion = jsonTarea.getDouble("calificacion")
+                                                .toFloat(),
                                             fechaEntrega = jsonTarea.optLong("duedate", 0L),
                                             avalada = jsonTarea.getInt("avaladoPadre"),
                                             curso = cursos[i]
@@ -148,12 +180,12 @@ class PendientesFragment : Fragment() {
                                         tareasPendientes.add(tarea)
                                     }
                                 }
-                            }else {
+                            } else {
                                 Log.e("Error tareas", response.message)
                             }
                         }
                     }
-                }catch (e: Exception) {
+                } catch (e: Exception) {
                     Log.e("Error tareas", "Exception: ${e.message}")
                 }
             }
