@@ -53,7 +53,7 @@ class TodosFragment : Fragment() {
     private fun actualizarCursos(cursos: List<CursoConTarea>) {
         if (::adapter.isInitialized) {
             adapter.actualizarDatos(cursos)
-        }else {
+        } else {
             adapter = CursosAdapter(cursos.toMutableList())
             recyclerTodos.adapter = adapter
         }
@@ -62,22 +62,24 @@ class TodosFragment : Fragment() {
     private suspend fun getCursosConTareas(alumnoId: String) {
         val token = TokenManager.obtenerToken(requireContext())
 
-        val urlCursos = "http://192.168.0.10:8080/escuelaAlumnosCursos/api/alumnosCursos/alumnos/$alumnoId"
+        val urlCursos =
+            "http://192.168.0.10:8080/escuelaAlumnosCursos/api/alumnosCursos/alumnos/$alumnoId"
         val cursos = mutableListOf<Int>()
         val cursosAlumno = mutableListOf<Int>()
 
         var nombre = ""
-        val tareas = mutableListOf<Tarea>()
         val cursosTareas = mutableListOf<CursoConTarea>()
 
         withContext(Dispatchers.IO) {
             try {
-                val request = Request.Builder().url(urlCursos).header("Authorization", "Bearer $token").get().build()
+                val request =
+                    Request.Builder().url(urlCursos).header("Authorization", "Bearer $token").get()
+                        .build()
                 val response = client.newCall(request).execute()
                 response.use {
                     if (response.isSuccessful) {
                         val responseBody = response.body?.string()
-                        if(!responseBody.isNullOrEmpty()) {
+                        if (!responseBody.isNullOrEmpty()) {
                             val jsonArray = JSONArray(responseBody)
                             for (i in 0 until jsonArray.length()) {
                                 val jsonCurso = jsonArray.getJSONObject(i)
@@ -86,73 +88,82 @@ class TodosFragment : Fragment() {
                                 cursosAlumno.add(cursoId)
                                 cursos.add(curso)
                             }
+                            Log.w("Cursos", cursos.toString())
                         }
                     }
                 }
-            }catch (e: Exception) {
+            } catch (e: Exception) {
                 Log.e("Error cursos", "Exception: ${e.message}")
             }
         }
 
-        for (curso in cursos) {
-            val urlCurso = "http://192.168.0.10:8080/escuelaCursos/api/cursos/$curso"
+        for (i in 0 until cursos.size) {
+            val tareas = mutableListOf<Tarea>()
+            val urlCurso = "http://192.168.0.10:8080/escuelaCursos/api/cursos/${cursos[i]}"
+            Log.w("urlCurso", urlCurso)
 
             withContext(Dispatchers.IO) {
                 try {
-                    val request = Request.Builder().url(urlCurso).header("Authorization", "Bearer $token").get().build()
+                    val request =
+                        Request.Builder().url(urlCurso).header("Authorization", "Bearer $token")
+                            .get().build()
                     val response = client.newCall(request).execute()
                     response.use {
                         if (response.isSuccessful) {
                             val responseBody = response.body?.string()
-                            if(!responseBody.isNullOrEmpty()) {
+                            if (!responseBody.isNullOrEmpty()) {
                                 val jsonCurso = JSONObject(responseBody)
                                 val nombreCurso = jsonCurso.getString("nombre")
                                 nombre = nombreCurso
                             }
                         }
                     }
-                }catch (e: Exception) {
+                } catch (e: Exception) {
                     Log.e("Error cursos", "Exception: ${e.message}")
                 }
             }
 
-            for (cursoId in cursosAlumno) {
-                val urlTareas = "http://192.168.0.10:8080/escuelaTareas/api/tareas/curso/$cursoId"
+            val urlTareas =
+                "http://192.168.0.10:8080/escuelaTareas/api/tareas/curso/${cursosAlumno[i]}"
+            Log.w("urlTareas", urlTareas)
 
-                withContext(Dispatchers.IO) {
-                    try {
-                        val request = Request.Builder().url(urlTareas).header("Authorization", "Bearer $token").get().build()
-                        val response = client.newCall(request).execute()
-                        response.use {
-                            if (response.isSuccessful) {
-                                val responseBody = response.body?.string()
-                                if(!responseBody.isNullOrEmpty()) {
-                                    val jsonArray = JSONArray(responseBody)
-                                    for (i in 0 until jsonArray.length()) {
-                                        val jsonTarea = jsonArray.getJSONObject(i)
-                                        val tarea = Tarea(
-                                            id = jsonTarea.getInt("id"),
-                                            titulo = jsonTarea.getString("nombre"),
-                                            calificacion = jsonTarea.getDouble("calificacion").toFloat(),
-                                            fechaEntrega = jsonTarea.optLong("duedate", 0L),
-                                            avalada = jsonTarea.getInt("avaladoPadre"),
-                                            curso = cursoId
-                                        )
-                                        tareas.add(tarea)
-                                    }
-                                }else {
-                                    Log.e("Error tareas", response.message)
+            withContext(Dispatchers.IO) {
+                try {
+                    val request =
+                        Request.Builder().url(urlTareas).header("Authorization", "Bearer $token")
+                            .get().build()
+                    val response = client.newCall(request).execute()
+                    response.use {
+                        if (response.isSuccessful) {
+                            val responseBody = response.body?.string()
+                            Log.w("Response Tareas", responseBody.toString())
+                            if (!responseBody.isNullOrEmpty()) {
+                                val jsonArray = JSONArray(responseBody)
+                                for (j in 0 until jsonArray.length()) {
+                                    val jsonTarea = jsonArray.getJSONObject(j)
+                                    val tarea = Tarea(
+                                        id = jsonTarea.getInt("id"),
+                                        titulo = jsonTarea.getString("nombre"),
+                                        calificacion = jsonTarea.getDouble("calificacion")
+                                            .toFloat(),
+                                        fechaEntrega = jsonTarea.optLong("duedate", 0L),
+                                        avalada = jsonTarea.getInt("avaladoPadre"),
+                                        curso = cursosAlumno[i]
+                                    )
+                                    tareas.add(tarea)
                                 }
+                            } else {
+                                Log.e("Error tareas", response.message)
                             }
                         }
-                    }catch (e: Exception) {
-                        Log.e("Error tareas", "Exception: ${e.message}")
                     }
+                } catch (e: Exception) {
+                    Log.e("Error tareas", "Exception: ${e.message}")
                 }
             }
 
-            cursosTareas.add(CursoConTarea(curso, nombre, tareas, false))
-            Log.w("Cursos agregados", cursosTareas.toString())
+            cursosTareas.add(CursoConTarea(i, nombre, tareas, false))
+            Log.w("Cursos obtenidos", cursosTareas.toString())
         }
 
         actualizarCursos(cursosTareas)
